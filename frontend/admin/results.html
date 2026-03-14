@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results — Admin Portal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🛡️ Admin Portal<span>Election Commission</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+                <a href="voters.html" class="nav-item"><span class="icon">👥</span> Voter List</a>
+                <a href="candidates.html" class="nav-item"><span class="icon">🏛️</span> Candidates</a>
+                <a href="polling.html" class="nav-item"><span class="icon">🗳️</span> Polling Mode</a>
+                <a href="results.html" class="nav-item active"><span class="icon">📈</span> Results</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">📈 Election Results</h1>
+                <p class="page-subtitle">Leading candidates per constituency</p>
+            </div>
+
+            <div class="results-grid" id="results-grid">
+                <div style="grid-column:span 2; text-align:center; padding:40px;">
+                    <div class="spinner"></div>
+                    <p class="text-muted text-sm mt-3">Loading results...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Result Detail Modal -->
+    <div class="modal-overlay hidden" id="result-modal">
+        <div class="modal" style="max-width:600px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-const-name">—</h3>
+                <button class="modal-close" onclick="closeResultModal()">✕</button>
+            </div>
+            <div id="modal-results"></div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        async function init() {
+            const data = await requireAdminAuth();
+            if (!data) return;
+
+            const res = await api('GET', '/api/admin/results');
+            if (!res || !res.success) return;
+
+            const grid = document.getElementById('results-grid');
+
+            if (res.results.length === 0) {
+                grid.innerHTML = `
+          <div style="grid-column:span 2; text-align:center; padding:60px;">
+            <div style="font-size:3rem; margin-bottom:16px;">🗳️</div>
+            <h3 style="font-size:1.1rem; font-weight:600; margin-bottom:8px;">No Votes Recorded Yet</h3>
+            <p class="text-muted text-sm">Results will appear here once votes are cast in Polling Mode</p>
+          </div>
+        `;
+                return;
+            }
+
+            grid.innerHTML = res.results.map(r => `
+        <div class="result-card" onclick="showDetail(${r.constituency_id}, '${r.constituency_name.replace(/'/g, "\\'")}')">
+          <div class="constituency-name">${r.constituency_name}</div>
+          <div class="text-xs text-muted">Constituency #${r.constituency_id}</div>
+
+          <div class="winner-info">
+            <span class="party-dot" style="background:${r.color_code}; width:14px; height:14px;"></span>
+            <div style="flex:1;">
+              <div style="font-size:0.9rem; font-weight:600; color:${r.color_code};">${r.candidate_name}</div>
+              <div class="text-xs text-muted">${r.party_name} (${r.party_abbr})</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:1.1rem; font-weight:800; color:var(--green);">${r.vote_count}</div>
+              <div class="text-xs text-muted">votes</div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        async function showDetail(constId, constName) {
+            document.getElementById('modal-const-name').textContent = constName;
+            document.getElementById('modal-results').innerHTML = '<div class="spinner" style="margin:20px auto;"></div>';
+            document.getElementById('result-modal').classList.remove('hidden');
+
+            const res = await api('GET', `/api/admin/results/${constId}`);
+            if (!res || !res.success) return;
+
+            const container = document.getElementById('modal-results');
+            if (res.results.length === 0) {
+                container.innerHTML = '<p class="text-muted text-sm text-center p-4">No votes recorded for this constituency</p>';
+                return;
+            }
+
+            const maxVotes = Math.max(...res.results.map(r => r.vote_count));
+
+            container.innerHTML = res.results.map((r, i) => {
+                const pctWidth = maxVotes > 0 ? (r.vote_count / maxVotes * 100) : 0;
+                const isLeader = i === 0;
+                return `
+          <div class="glass-card" style="padding:14px; margin-bottom:8px; ${isLeader ? 'border-color:' + r.color_code + '33;' : ''}">
+            <div class="flex items-center gap-3 mb-2">
+              <span style="font-size:0.85rem; font-weight:800; color:${isLeader ? 'var(--green)' : 'var(--text3)'}; width:24px;">#${r.position}</span>
+              <span class="party-dot" style="background:${r.color_code}; width:12px; height:12px;"></span>
+              <div style="flex:1;">
+                <div style="font-size:0.9rem; font-weight:600;">${r.candidate_name}</div>
+                <div class="text-xs text-muted">${r.party_name} (${r.party_abbr})</div>
+              </div>
+              <span style="font-size:1rem; font-weight:800; color:${isLeader ? 'var(--green)' : 'var(--text2)'};">${r.vote_count}</span>
+            </div>
+            <div class="progress-bar" style="height:4px;">
+              <div class="progress-fill" style="width:${pctWidth}%; background:${r.color_code};"></div>
+            </div>
+          </div>
+        `;
+            }).join('');
+        }
+
+        function closeResultModal() {
+            document.getElementById('result-modal').classList.add('hidden');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

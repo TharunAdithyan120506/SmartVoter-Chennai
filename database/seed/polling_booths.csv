@@ -1,0 +1,49 @@
+booth_id,booth_name,constituency_id,address,total_voters,booth_officer
+1,Govt. Boys Higher Secondary School,1,"18 North Beach Road, Thiruvottiyur, Chennai - 600019",3200,M. Senthilkumar
+2,Panchayat Union Primary School,1,"42 Kamaraj Nagar, Thiruvottiyur, Chennai - 600019",2950,K. Umamaheswari
+3,Corporation Ward Office Hall,1,"7 Rajaji Salai, Thiruvottiyur, Chennai - 600019",3100,P. Gopalakrishnan
+4,St. Joseph Higher Secondary School,2,"12 Broadway, Dr. RK Nagar, Chennai - 600001",2800,S. Anbarasan
+5,Municipal Community Hall,2,"35 Mint Street, Dr. RK Nagar, Chennai - 600001",3050,L. Sangeetha
+6,Govt. Girls Higher Secondary School,2,"8 Walltax Road, Dr. RK Nagar, Chennai - 600079",2700,R. Muthulakshmi
+7,Corporation Primary School,3,"21 Perambur High Road, Perambur, Chennai - 600011",3400,T. Shanmugam
+8,Jawahar Higher Secondary School,3,"56 Purasawalkam High Road, Chennai - 600007",3150,N. Kalyani
+9,Railway Colony Community Hall,3,"14 Perambur Barracks Road, Chennai - 600012",2900,V. Raghavan
+10,Nehru Memorial Higher Secondary School,4,"33 Kolathur Main Road, Kolathur, Chennai - 600099",3500,A. Prabakaran
+11,Govt. Model School,4,"18 Retteri Lake Road, Kolathur, Chennai - 600099",3250,M. Vasanthi
+12,Tamil Nadu Slum Clearance Board Hall,4,"45 Kowlbazar, Kolathur, Chennai - 600099",3000,K. Dhanasekar
+13,Govt. Higher Secondary School,5,"22 Villivakkam Main Road, Chennai - 600049",3300,S. Padmavathi
+14,Corporation Middle School,5,"9 Agraharam Street, Villivakkam, Chennai - 600049",3100,P. Kumaresan
+15,Sri Ramakrishna Community Hall,5,"31 ICF Colony, Villivakkam, Chennai - 600049",2850,R. Jayashree
+16,TVK Nagar Corporation School,6,"15 Otteri Main Road, Chennai - 600012",2600,B. Saravanan
+17,Community Health Centre Hall,6,"28 Pulianthope, Chennai - 600012",2750,G. Indira
+18,Govt. Primary School,6,"5 Seven Wells, Chennai - 600001",2500,D. Mohan
+19,Egmore Railway Museum Hall,7,"12 Gandhi Irwin Road, Egmore, Chennai - 600008",2900,S. Kavitha
+20,Presidency College Hall,7,"33 Kamarajar Salai, Egmore, Chennai - 600005",3100,M. Arumugam
+21,Govt. Multi-Purpose School,7,"8 Pantheon Road, Egmore, Chennai - 600008",2700,R. Suguna
+22,Ripon Building Community Hall,8,"2 EVR Periyar Salai, Chennai Central, Chennai - 600003",3000,T. Nandakumar
+23,Pachaiyappa College Hall,8,"18 Poonamallee High Road, Chennai - 600003",3200,K. Bhuvaneswari
+24,Corporation Girls School,8,"45 General Patters Road, Chennai - 600002",2850,V. Subramanian
+25,Harbour Community Centre,9,"6 Royapuram High Road, Chennai - 600013",2400,A. Mariappan
+26,Fisheries Dept. Community Hall,9,"22 Kasimedu, Chennai - 600013",2200,P. Sekar
+27,Govt. Primary School Tondiarpet,9,"11 TH Road, Tondiarpet, Chennai - 600081",2600,S. Rani
+28,Queen Mary College Hall,10,"15 Cathedral Road, Thousand Lights, Chennai - 600086",2700,M. Renuka
+29,Asan Memorial Higher Secondary,10,"28 Kilpauk Garden Road, Chennai - 600010",3000,N. Venkatesan
+30,Loyola College Hall,10,"8 Sterling Road, Nungambakkam, Chennai - 600034",2900,C. Josephine
+31,Chepauk Stadium Community Hall,11,"2 Wallajah Road, Chepauk, Chennai - 600005",3100,R. Balamurugan
+32,Govt. Higher Secondary School,11,"18 Triplicane High Road, Chennai - 600005",2950,T. Ponni
+33,Corporation School Triplicane,11,"30 Big Street, Triplicane, Chennai - 600005",2800,K. Selvakumar
+34,Lady Sivaswami Ayyar School,12,"5 Mylapore Tank Street, Mylapore, Chennai - 600004",3200,G. Lalitha
+35,Ramakrishna Mission School,12,"22 RK Mutt Road, Mylapore, Chennai - 600004",3400,V. Krishnamoorthy
+36,Corporation Primary School,12,"14 Luz Church Road, Mylapore, Chennai - 600004",2900,S. Meenakshi
+37,Govt. Higher Secondary School,13,"28 Velachery Main Road, Velachery, Chennai - 600042",3500,P. Karthikeyan
+38,SIDCO Nagar Community Hall,13,"10 SIDCO Colony, Velachery, Chennai - 600042",3300,A. Sumathi
+39,MAM College Hall,13,"18 Guindy, Chennai - 600032",3100,D. Rajendran
+40,IIT Madras Community Centre,14,"5 Sardar Patel Road, Adyar, Chennai - 600036",3600,B. Priyanka
+41,CSIR Community Hall,14,"22 Taramani Link Road, Chennai - 600113",3400,M. Sundarrajan
+42,Govt. School Thoraipakkam,14,"15 OMR Road, Shozhinganallur, Chennai - 600097",3200,K. Revathi
+43,Alandur Municipality Hall,15,"3 GST Road, Alandur, Chennai - 600016",3100,S. Babu
+44,Govt. Boys School,15,"28 Guindy Industrial Estate, Chennai - 600032",2900,P. Fathima
+45,St. Thomas Mount Community Hall,15,"12 Mount Road, St. Thomas Mount, Chennai - 600016",3050,R. Ganesan
+46,Corporation Higher Secondary School,16,"8 Saidapet Main Road, Saidapet, Chennai - 600015",2800,T. Malathi
+47,Govt. Primary School,16,"22 Jafferkhanpet, Saidapet, Chennai - 600083",3000,N. Palani
+48,Municipal Community Centre,16,"15 West Mambalam, Chennai - 600033",2750,K. Shanthi

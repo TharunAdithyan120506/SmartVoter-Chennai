@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidates — Admin Portal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🛡️ Admin Portal<span>Election Commission</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+                <a href="voters.html" class="nav-item"><span class="icon">👥</span> Voter List</a>
+                <a href="candidates.html" class="nav-item active"><span class="icon">🏛️</span> Candidates</a>
+                <a href="polling.html" class="nav-item"><span class="icon">🗳️</span> Polling Mode</a>
+                <a href="results.html" class="nav-item"><span class="icon">📈</span> Results</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">🏛️ Candidates</h1>
+                <p class="page-subtitle">All registered candidates for the 2026 elections</p>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <select class="form-input" id="const-filter"
+                        style="width:250px; padding:8px 14px; font-size:0.8rem;" onchange="loadCandidates()">
+                        <option value="">All Constituencies</option>
+                    </select>
+                    <span class="text-xs text-muted" id="total-label">—</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th onclick="sortBy('name')">Name ↕</th>
+                            <th onclick="sortBy('party_abbr')">Party ↕</th>
+                            <th onclick="sortBy('age')">Age ↕</th>
+                            <th>Gender</th>
+                            <th onclick="sortBy('constituency_name')">Constituency ↕</th>
+                            <th onclick="sortBy('criminal_cases')">Criminal Cases ↕</th>
+                            <th onclick="sortBy('assets_lakh')">Assets (₹L) ↕</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidates-table"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let allCandidates = [];
+        let sortField = 'name';
+        let sortDir = 1;
+
+        async function init() {
+            const data = await requireAdminAuth();
+            if (!data) return;
+
+            // Load constituency dropdown
+            const constRes = await api('GET', '/api/constituencies');
+            if (constRes && constRes.success) {
+                const sel = document.getElementById('const-filter');
+                constRes.constituencies.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.constituency_id;
+                    opt.textContent = c.name;
+                    sel.appendChild(opt);
+                });
+            }
+
+            loadCandidates();
+        }
+
+        async function loadCandidates() {
+            const constId = document.getElementById('const-filter').value;
+            const url = constId ? `/api/admin/candidates?constituency_id=${constId}` : '/api/admin/candidates';
+            const res = await api('GET', url);
+            if (!res || !res.success) return;
+
+            allCandidates = res.candidates;
+            document.getElementById('total-label').textContent = `${allCandidates.length} candidates`;
+            renderTable();
+        }
+
+        function sortBy(field) {
+            if (sortField === field) {
+                sortDir *= -1;
+            } else {
+                sortField = field;
+                sortDir = 1;
+            }
+            renderTable();
+        }
+
+        function renderTable() {
+            const sorted = [...allCandidates].sort((a, b) => {
+                let va = a[sortField], vb = b[sortField];
+                if (typeof va === 'string') return va.localeCompare(vb) * sortDir;
+                return ((va || 0) - (vb || 0)) * sortDir;
+            });
+
+            const tbody = document.getElementById('candidates-table');
+            tbody.innerHTML = sorted.map(c => {
+                const crimStyle = c.criminal_cases > 0 ? 'color:var(--red);font-weight:700;' : 'color:var(--green);';
+                return `<tr>
+          <td style="font-weight:600; color:var(--text1);">${c.name}</td>
+          <td>
+            <div class="flex items-center gap-2">
+              <span class="party-dot" style="background:${c.color_code};"></span>
+              <span style="color:${c.color_code}; font-weight:600; font-size:0.8rem;">${c.party_abbr}</span>
+            </div>
+          </td>
+          <td>${c.age}</td>
+          <td>${c.gender}</td>
+          <td>${c.constituency_name}</td>
+          <td style="${crimStyle}">${c.criminal_cases}</td>
+          <td>₹${c.assets_lakh || 0}</td>
+        </tr>`;
+            }).join('');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

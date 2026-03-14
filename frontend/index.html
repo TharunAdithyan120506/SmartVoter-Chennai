@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chennai Elections 2026 — Login</title>
+  <meta name="description" content="Chennai District Election Management Portal — Voter and Admin Login">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="radial-glow"></div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <!-- Logo -->
+      <div class="login-logo">
+        <div class="logo-icon">🗳️</div>
+        <h1>Chennai Elections 2026</h1>
+        <p>Tamil Nadu Legislative Assembly · District Portal</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="login-tabs">
+        <div class="login-tab active" id="tab-voter" onclick="switchTab('voter')">Voter Login</div>
+        <div class="login-tab" id="tab-admin" onclick="switchTab('admin')">Admin Portal</div>
+      </div>
+
+      <!-- Voter Login -->
+      <div id="voter-login">
+        <!-- Step 1: Aadhar -->
+        <div id="voter-step1">
+          <div class="form-group">
+            <label>Aadhar Number</label>
+            <input type="text" class="form-input mono" id="aadhar-input"
+                   placeholder="XXXX XXXX XXXX" maxlength="14"
+                   oninput="formatAadhar(this)">
+          </div>
+          <button class="btn btn-primary btn-full btn-lg" id="send-otp-btn" onclick="sendOTP()">
+            Send OTP
+          </button>
+          <p style="text-align:center; margin-top:14px; font-size:0.75rem; color:var(--text3)">
+            Enter your 12-digit Aadhar number to receive an OTP
+          </p>
+        </div>
+
+        <!-- Step 2: OTP -->
+        <div id="voter-step2" class="hidden">
+          <p style="text-align:center; margin-bottom:8px; font-size:0.85rem; color:var(--text2)">
+            OTP sent to <span id="masked-phone" class="mono text-accent"></span>
+          </p>
+          <div class="otp-inputs" id="otp-inputs">
+            <input type="text" class="otp-input" maxlength="1" data-idx="0">
+            <input type="text" class="otp-input" maxlength="1" data-idx="1">
+            <input type="text" class="otp-input" maxlength="1" data-idx="2">
+            <input type="text" class="otp-input" maxlength="1" data-idx="3">
+            <input type="text" class="otp-input" maxlength="1" data-idx="4">
+            <input type="text" class="otp-input" maxlength="1" data-idx="5">
+          </div>
+          <button class="btn btn-primary btn-full btn-lg" id="verify-otp-btn" onclick="verifyOTP()">
+            Verify & Enter
+          </button>
+          <p style="text-align:center; margin-top:14px;">
+            <a href="#" onclick="backToStep1()" style="font-size:0.8rem; color:var(--text3);">← Change Aadhar Number</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Admin Login -->
+      <div id="admin-login" class="hidden">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" class="form-input" id="admin-username" placeholder="Enter username">
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" class="form-input" id="admin-password" placeholder="Enter password">
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" id="admin-login-btn" onclick="adminLogin()">
+          Access Admin Portal
+        </button>
+        <p style="text-align:center; margin-top:14px; font-size:0.75rem; color:var(--text3)">
+          Authorized Election Commission officials only
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    let currentTab = 'voter';
+    let otpSessionId = '';
+    let currentAadhar = '';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.getElementById('tab-voter').classList.toggle('active', tab === 'voter');
+      document.getElementById('tab-admin').classList.toggle('active', tab === 'admin');
+      document.getElementById('voter-login').classList.toggle('hidden', tab !== 'voter');
+      document.getElementById('admin-login').classList.toggle('hidden', tab !== 'admin');
+    }
+
+    function formatAadhar(input) {
+      let val = input.value.replace(/\D/g, '');
+      if (val.length > 12) val = val.slice(0, 12);
+      let formatted = '';
+      for (let i = 0; i < val.length; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += val[i];
+      }
+      input.value = formatted;
+    }
+
+    async function sendOTP() {
+      const btn = document.getElementById('send-otp-btn');
+      const aadhar = document.getElementById('aadhar-input').value.replace(/\s/g, '');
+
+      if (aadhar.length !== 12) {
+        showToast('Please enter a valid 12-digit Aadhar number', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      const res = await api('POST', '/api/auth/send-otp', { aadhar });
+
+      btn.disabled = false;
+      btn.textContent = 'Send OTP';
+
+      if (res && res.success) {
+        otpSessionId = res.session_id;
+        currentAadhar = aadhar;
+        document.getElementById('masked-phone').textContent = res.masked_phone;
+
+        // If mock OTP, show it
+        if (res.otp) {
+          showToast(`Demo OTP: ${res.otp}`, 'info', 10000);
+        }
+
+        document.getElementById('voter-step1').classList.add('hidden');
+        document.getElementById('voter-step2').classList.remove('hidden');
+
+        // Focus first OTP input
+        document.querySelector('.otp-input[data-idx="0"]').focus();
+        showToast('OTP sent successfully!', 'success');
+      } else {
+        showToast(res?.error || 'Failed to send OTP', 'error');
+      }
+    }
+
+    async function verifyOTP() {
+      const btn = document.getElementById('verify-otp-btn');
+      const inputs = document.querySelectorAll('.otp-input');
+      let otp = '';
+      inputs.forEach(inp => otp += inp.value);
+
+      if (otp.length !== 6) {
+        showToast('Please enter the complete 6-digit OTP', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      const res = await api('POST', '/api/auth/verify-otp', {
+        aadhar: currentAadhar,
+        session_id: otpSessionId,
+        otp: otp
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Verify & Enter';
+
+      if (res && res.success) {
+        showToast('Login successful! Redirecting...', 'success');
+        setTimeout(() => {
+          window.location.href = '/voter/home.html';
+        }, 800);
+      } else {
+        showToast(res?.error || 'OTP verification failed', 'error');
+      }
+    }
+
+    async function adminLogin() {
+      const btn = document.getElementById('admin-login-btn');
+      const username = document.getElementById('admin-username').value.trim();
+      const password = document.getElementById('admin-password').value;
+
+      if (!username || !password) {
+        showToast('Please enter username and password', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Authenticating...';
+
+      const res = await api('POST', '/api/auth/admin-login', { username, password });
+
+      btn.disabled = false;
+      btn.textContent = 'Access Admin Portal';
+
+      if (res && res.success) {
+        showToast(`Welcome, ${res.name}!`, 'success');
+        setTimeout(() => {
+          window.location.href = '/admin/dashboard.html';
+        }, 800);
+      } else {
+        showToast(res?.error || 'Login failed', 'error');
+      }
+    }
+
+    function backToStep1() {
+      document.getElementById('voter-step1').classList.remove('hidden');
+      document.getElementById('voter-step2').classList.add('hidden');
+      document.querySelectorAll('.otp-input').forEach(inp => inp.value = '');
+    }
+
+    // OTP input auto-advance
+    document.querySelectorAll('.otp-input').forEach((input, idx) => {
+      input.addEventListener('input', (e) => {
+        const val = e.target.value;
+        if (val && idx < 5) {
+          document.querySelector(`.otp-input[data-idx="${idx + 1}"]`).focus();
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !input.value && idx > 0) {
+          document.querySelector(`.otp-input[data-idx="${idx - 1}"]`).focus();
+        }
+        if (e.key === 'Enter') verifyOTP();
+      });
+    });
+
+    // Enter key for admin login
+    document.getElementById('admin-password')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') adminLogin();
+    });
+
+    // Enter key for aadhar
+    document.getElementById('aadhar-input')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') sendOTP();
+    });
+  </script>
+</body>
+</html>

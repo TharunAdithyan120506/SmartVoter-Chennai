@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Voter Card — Chennai Elections 2026</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🗳️ Chennai Elections<span>2026 Legislative Assembly</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="home.html" class="nav-item"><span class="icon">🗺️</span> Constituency Map</a>
+                <a href="evoter.html" class="nav-item active"><span class="icon">🪪</span> E-Voter Card</a>
+                <a href="profile.html" class="nav-item"><span class="icon">👤</span> My Profile</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="voter-chip">
+                    <div class="voter-chip-avatar" id="avatar">👤</div>
+                    <div class="voter-chip-info">
+                        <div class="voter-chip-name" id="voter-name">Loading...</div>
+                        <div class="voter-chip-id" id="voter-id">—</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">🪪 E-Voter Card</h1>
+                <p class="page-subtitle">Your digital voter identification card with QR code</p>
+            </div>
+
+            <div class="voter-card" id="voter-card-el">
+                <!-- Header Band -->
+                <div class="voter-card-header">
+                    <h3>Election Commission of India</h3>
+                    <p>Tamil Nadu · Chennai District · 2026</p>
+                </div>
+
+                <!-- Body -->
+                <div class="voter-card-body">
+                    <div class="voter-card-photo" id="card-photo">👤</div>
+                    <div class="voter-card-details">
+                        <h2 id="card-name">—</h2>
+                        <div class="voter-field">
+                            <span class="voter-field-label">Voter ID</span>
+                            <span class="voter-field-value mono" id="card-voter-id">—</span>
+                        </div>
+                        <div class="voter-field">
+                            <span class="voter-field-label">Date of Birth</span>
+                            <span class="voter-field-value" id="card-dob">—</span>
+                        </div>
+                        <div class="voter-field">
+                            <span class="voter-field-label">Gender</span>
+                            <span class="voter-field-value" id="card-gender">—</span>
+                        </div>
+                        <div class="voter-field">
+                            <span class="voter-field-label">Constituency</span>
+                            <span class="voter-field-value" id="card-constituency">—</span>
+                        </div>
+                        <div class="voter-field">
+                            <span class="voter-field-label">Booth</span>
+                            <span class="voter-field-value" id="card-booth">—</span>
+                        </div>
+                        <div class="voter-field">
+                            <span class="voter-field-label">Serial No.</span>
+                            <span class="voter-field-value mono" id="card-serial">—</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div id="qrcode" style="background:white; padding:6px; border-radius:6px;"></div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="voter-card-footer">
+                    <span id="card-address">—</span>
+                    <span style="font-weight:600; color:var(--accent);">VALID 2026</span>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:24px;">
+                <button class="btn btn-primary btn-lg" onclick="downloadCard()">
+                    📥 Download Card as PNG
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        async function init() {
+            const voter = await requireVoterAuth();
+            if (!voter) return;
+
+            document.getElementById('voter-name').textContent = voter.name;
+            document.getElementById('voter-id').textContent = voter.voter_id;
+
+            const isF = voter.gender === 'Female';
+            document.getElementById('avatar').textContent = isF ? '👩' : '👨';
+            document.getElementById('card-photo').textContent = isF ? '👩' : '👨';
+
+            document.getElementById('card-name').textContent = voter.name;
+            document.getElementById('card-voter-id').textContent = voter.voter_id;
+            document.getElementById('card-dob').textContent = voter.dob || '—';
+            document.getElementById('card-gender').textContent = voter.gender;
+            document.getElementById('card-constituency').textContent = voter.constituency_name;
+            document.getElementById('card-booth').textContent = voter.booth_name;
+            document.getElementById('card-serial').textContent = voter.serial_no;
+            document.getElementById('card-address').textContent = (voter.address || '').slice(0, 60) + '...';
+
+            // Generate QR code
+            new QRCode(document.getElementById('qrcode'), {
+                text: voter.voter_id,
+                width: 100,
+                height: 100,
+                colorDark: '#000000',
+                colorLight: '#ffffff'
+            });
+        }
+
+        function downloadCard() {
+            const card = document.getElementById('voter-card-el');
+            html2canvas(card, {
+                backgroundColor: '#111827',
+                scale: 2,
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'e-voter-card.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                showToast('Card downloaded!', 'success');
+            });
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

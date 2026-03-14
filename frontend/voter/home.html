@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constituency Map — Chennai Elections 2026</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    🗳️ Chennai Elections
+                    <span>2026 Legislative Assembly</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="home.html" class="nav-item active"><span class="icon">🗺️</span> Constituency Map</a>
+                <a href="evoter.html" class="nav-item"><span class="icon">🪪</span> E-Voter Card</a>
+                <a href="profile.html" class="nav-item"><span class="icon">👤</span> My Profile</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="voter-chip" id="voter-chip">
+                    <div class="voter-chip-avatar">👤</div>
+                    <div class="voter-chip-info">
+                        <div class="voter-chip-name" id="voter-name">Loading...</div>
+                        <div class="voter-chip-id" id="voter-id">—</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">🗺️ Chennai Constituency Map</h1>
+                <p class="page-subtitle">Click on any constituency to view candidates and details</p>
+            </div>
+
+            <div style="display:flex; gap:0; position:relative;">
+                <!-- Map -->
+                <div class="map-container" style="flex:1;">
+                    <svg class="chennai-map" viewBox="-10 -10 300 400" width="500" height="660" id="map-svg"></svg>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Right Slide Panel (Constituency Info) -->
+    <div class="slide-panel" id="constituency-panel">
+        <button class="panel-close" onclick="closePanel()">✕</button>
+        <div id="panel-content"></div>
+    </div>
+
+    <!-- Detail Panel (Candidate Detail) -->
+    <div class="detail-panel" id="candidate-panel">
+        <button class="panel-close" onclick="closeDetailPanel()">✕</button>
+        <div id="detail-content"></div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        const MAP_PATHS = [
+            { id: 1, d: "M158,4 L276,4 L276,72 L212,82 L158,68Z", lx: 220, ly: 40, name: "Thiruvottiyur" },
+            { id: 2, d: "M4,4 L158,4 L158,68 L104,80 L4,62Z", lx: 80, ly: 36, name: "Dr. RK Nagar" },
+            { id: 3, d: "M4,62 L104,80 L112,132 L52,140 L4,122Z", lx: 52, ly: 100, name: "Perambur" },
+            { id: 4, d: "M104,80 L212,82 L218,132 L112,132Z", lx: 160, ly: 107, name: "Kolathur" },
+            { id: 5, d: "M212,82 L276,72 L276,132 L218,132Z", lx: 249, ly: 104, name: "Villivakkam" },
+            { id: 6, d: "M4,122 L52,140 L58,188 L4,188Z", lx: 28, ly: 157, name: "TVK Nagar" },
+            { id: 7, d: "M52,140 L158,132 L162,188 L58,188Z", lx: 104, ly: 162, name: "Egmore" },
+            { id: 8, d: "M158,132 L252,132 L258,188 L162,188Z", lx: 204, ly: 162, name: "Chennai Central" },
+            { id: 9, d: "M252,132 L276,132 L276,192 L258,188Z", lx: 266, ly: 162, name: "Harbour" },
+            { id: 10, d: "M162,188 L258,188 L264,242 L162,242Z", lx: 214, ly: 217, name: "Thousand Lights" },
+            { id: 11, d: "M58,188 L162,188 L162,242 L58,242Z", lx: 108, ly: 217, name: "Chepauk" },
+            { id: 16, d: "M4,188 L58,188 L58,242 L4,242Z", lx: 28, ly: 217, name: "Saidapet" },
+            { id: 12, d: "M162,242 L276,242 L276,308 L162,302Z", lx: 222, ly: 273, name: "Mylapore" },
+            { id: 13, d: "M58,242 L162,242 L162,302 L58,298Z", lx: 108, ly: 272, name: "Velachery" },
+            { id: 15, d: "M4,242 L58,242 L58,298 L4,294Z", lx: 28, ly: 268, name: "Alandur" },
+            { id: 14, d: "M4,294 L276,308 L276,378 L4,370Z", lx: 140, ly: 338, name: "Shozhinganallur" },
+        ];
+
+        const COLORS = [
+            '#06b6d4', '#8b5cf6', '#f43f5e', '#10b981', '#f59e0b', '#6366f1',
+            '#ec4899', '#14b8a6', '#ef4444', '#3b82f6', '#a855f7', '#f97316',
+            '#22c55e', '#0ea5e9', '#e11d48', '#eab308'
+        ];
+
+        let voterData = null;
+        let constituencies = [];
+
+        async function init() {
+            voterData = await requireVoterAuth();
+            if (!voterData) return;
+
+            document.getElementById('voter-name').textContent = voterData.name;
+            document.getElementById('voter-id').textContent = voterData.voter_id;
+
+            // Set avatar based on gender
+            const avatarEl = document.querySelector('.voter-chip-avatar');
+            avatarEl.textContent = voterData.gender === 'Female' ? '👩' : '👨';
+
+            // Load constituencies
+            const res = await api('GET', '/api/constituencies');
+            if (res && res.success) {
+                constituencies = res.constituencies;
+                renderMap();
+            }
+        }
+
+        function renderMap() {
+            const svg = document.getElementById('map-svg');
+            svg.innerHTML = '';
+
+            // Find voter's constituency
+            const voterConstId = voterData ? parseInt(voterData.voter_id?.split('/')[2]) : -1;
+
+            MAP_PATHS.forEach((mp, idx) => {
+                const constData = constituencies.find(c => c.constituency_id === mp.id);
+                const isVoterConst = mp.id === voterConstId;
+                const color = COLORS[idx % COLORS.length];
+
+                // Create path
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', mp.d);
+                path.setAttribute('fill', color);
+                path.setAttribute('fill-opacity', isVoterConst ? '0.6' : '0.25');
+                path.setAttribute('stroke', isVoterConst ? color : 'rgba(255,255,255,0.2)');
+                path.setAttribute('stroke-width', isVoterConst ? '2.5' : '1');
+                path.setAttribute('data-id', mp.id);
+                path.style.cursor = 'pointer';
+                path.style.transition = 'all 0.3s ease';
+
+                if (isVoterConst) {
+                    path.style.filter = `drop-shadow(0 0 8px ${color})`;
+                }
+
+                path.addEventListener('mouseenter', () => {
+                    path.setAttribute('fill-opacity', '0.45');
+                    path.setAttribute('stroke-width', '2');
+                });
+                path.addEventListener('mouseleave', () => {
+                    path.setAttribute('fill-opacity', isVoterConst ? '0.6' : '0.25');
+                    path.setAttribute('stroke-width', isVoterConst ? '2.5' : '1');
+                });
+                path.addEventListener('click', () => openPanel(mp.id, constData, color));
+
+                svg.appendChild(path);
+
+                // Label
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', mp.lx);
+                text.setAttribute('y', mp.ly);
+                text.setAttribute('class', 'map-label');
+                text.textContent = mp.name;
+                text.style.cursor = 'pointer';
+                text.addEventListener('click', () => openPanel(mp.id, constData, color));
+                svg.appendChild(text);
+            });
+        }
+
+        async function openPanel(constId, constData, color) {
+            const panel = document.getElementById('constituency-panel');
+            const content = document.getElementById('panel-content');
+
+            const turnout = constData ? ((constData.voted_count / constData.total_voters) * 100).toFixed(1) : 0;
+            const typeBadge = constData?.type === 'SC' ? '<span class="badge badge-sc">SC</span>' : '<span class="badge badge-general">General</span>';
+
+            content.innerHTML = `
+        <div style="margin-top:20px;">
+          <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:4px;">${constData?.name || 'Unknown'}</h2>
+          <div class="flex items-center gap-2 mb-3">
+            ${typeBadge}
+            <span class="text-xs text-muted">${constData?.region || ''} Chennai</span>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+            <div class="glass-card" style="padding:14px;">
+              <div style="font-size:1.3rem; font-weight:800; color:var(--accent);">${formatNumber(constData?.total_voters || 0)}</div>
+              <div class="text-xs text-muted">Total Voters</div>
+            </div>
+            <div class="glass-card" style="padding:14px;">
+              <div style="font-size:1.3rem; font-weight:800; color:var(--green);">${turnout}%</div>
+              <div class="text-xs text-muted">Turnout</div>
+            </div>
+          </div>
+          <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:12px; color:var(--text2);">Candidates</h3>
+          <div id="candidates-list"><div class="spinner"></div></div>
+        </div>
+      `;
+
+            panel.classList.add('open');
+
+            // Fetch candidates
+            const res = await api('GET', `/api/constituencies/${constId}/candidates`);
+            const list = document.getElementById('candidates-list');
+            if (res && res.success) {
+                list.innerHTML = res.candidates.map(c => `
+          <div class="glass-card" style="padding:12px; margin-bottom:8px; cursor:pointer;"
+               onclick="openCandidateDetail(${c.candidate_id})">
+            <div class="flex items-center gap-3">
+              <span class="party-dot" style="background:${c.color_code}; width:12px; height:12px;"></span>
+              <div style="flex:1;">
+                <div style="font-size:0.85rem; font-weight:600;">${c.name}</div>
+                <div class="text-xs text-muted">${c.party_abbr} · Age ${c.age}</div>
+              </div>
+              <span style="font-size:0.7rem; color:var(--text3);">→</span>
+            </div>
+          </div>
+        `).join('');
+            } else {
+                list.innerHTML = '<p class="text-muted text-sm">No candidates found</p>';
+            }
+        }
+
+        async function openCandidateDetail(candidateId) {
+            const panel = document.getElementById('candidate-panel');
+            const content = document.getElementById('detail-content');
+            content.innerHTML = '<div class="spinner" style="margin-top:40px;"></div>';
+            panel.classList.add('open');
+
+            const res = await api('GET', `/api/candidates/${candidateId}`);
+            if (res && res.success) {
+                const c = res.candidate;
+                const crimColor = c.criminal_cases > 0 ? 'var(--red)' : 'var(--green)';
+                content.innerHTML = `
+          <div style="margin-top:20px;">
+            <div style="width:70px; height:85px; background:var(--glass); border:1px solid var(--border); border-radius:8px;
+                        display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:16px;">
+              ${c.gender === 'Female' ? '👩' : '👨'}
+            </div>
+            <h2 style="font-size:1.1rem; font-weight:700; margin-bottom:4px;">${c.name}</h2>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="party-dot" style="background:${c.color_code};"></span>
+              <span style="font-size:0.85rem; color:${c.color_code}; font-weight:600;">${c.party_name}</span>
+            </div>
+
+            <div style="display:grid; gap:12px;">
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Age</span><span class="text-sm">${c.age}</span></div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Gender</span><span class="text-sm">${c.gender}</span></div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Education</span><span class="text-sm">${c.education || 'N/A'}</span></div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Constituency</span><span class="text-sm">${c.constituency_name}</span></div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Assets</span><span class="text-sm">₹${c.assets_lakh || 0}L</span></div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Liabilities</span><span class="text-sm">₹${c.liabilities_lakh || 0}L</span></div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between">
+                  <span class="text-xs text-muted">Criminal Cases</span>
+                  <span class="text-sm" style="color:${crimColor}; font-weight:700;">${c.criminal_cases}</span>
+                </div>
+              </div>
+              <div class="glass-card" style="padding:12px;">
+                <div class="flex justify-between"><span class="text-xs text-muted">Alliance</span><span class="text-sm">${c.alliance || 'None'}</span></div>
+              </div>
+            </div>
+          </div>
+        `;
+            }
+        }
+
+        function closePanel() {
+            document.getElementById('constituency-panel').classList.remove('open');
+            closeDetailPanel();
+        }
+
+        function closeDetailPanel() {
+            document.getElementById('candidate-panel').classList.remove('open');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

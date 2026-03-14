@@ -1,0 +1,113 @@
+candidate_id,name,age,gender,party_id,constituency_id,criminal_cases,assets_lakh,liabilities_lakh,education,status,nomination_date
+1,M. K. Tamilarasan,52,Male,DMK,1,0,245.50,32.00,MA Political Science,ACTIVE,2025-12-15
+2,R. Jayalakshmi,48,Female,AIADMK,1,0,189.75,18.50,BA Economics,ACTIVE,2025-12-15
+3,S. Venkatesh Naidu,45,Male,BJP,1,1,312.00,45.00,B.Com,ACTIVE,2025-12-15
+4,P. Karunakaran,55,Male,INC,1,0,156.30,22.00,MA History,ACTIVE,2025-12-15
+5,T. Manikandan,35,Male,VCK,1,0,45.60,8.00,LLB,ACTIVE,2025-12-15
+6,N. Veeramani,42,Male,AIFB,1,0,78.90,12.00,B.Sc Chemistry,ACTIVE,2025-12-15
+7,K. Selvakumar,38,Male,IND,1,0,34.20,5.50,Diploma Engineering,ACTIVE,2025-12-15
+8,D. Sundararaj,58,Male,DMK,2,0,278.30,40.00,MBA,ACTIVE,2025-12-15
+9,V. Pushpalatha,44,Female,AIADMK,2,1,198.50,25.00,MA Tamil,ACTIVE,2025-12-15
+10,A. Ramkumar,40,Male,BJP,2,0,145.00,18.00,B.Tech,ACTIVE,2025-12-15
+11,G. Bharathi,50,Female,INC,2,0,167.80,20.00,BA Sociology,ACTIVE,2025-12-15
+12,L. Thirunavukkarasu,33,Male,VCK,2,0,52.30,7.00,MA Social Work,ACTIVE,2025-12-15
+13,C. Perumal,46,Male,AIFB,2,0,89.40,14.00,B.Sc Physics,ACTIVE,2025-12-15
+14,S. Murugan,36,Male,IND,2,2,28.70,4.00,12th Standard,ACTIVE,2025-12-15
+15,K. Anbazhagan,60,Male,DMK,3,0,325.00,55.00,LLB,ACTIVE,2025-12-15
+16,R. Meenalochani,42,Female,AIADMK,3,0,215.60,30.00,MA English,ACTIVE,2025-12-15
+17,P. Srinivasan,48,Male,BJP,3,1,178.90,22.00,B.Com CA,ACTIVE,2025-12-15
+18,M. Kamaraj,53,Male,INC,3,0,198.40,28.00,BA History,ACTIVE,2025-12-15
+19,V. Ezhilan,30,Male,VCK,3,0,38.50,6.00,MA Journalism,ACTIVE,2025-12-15
+20,T. Chellammal,55,Female,AIFB,3,0,92.10,15.00,B.Sc Maths,ACTIVE,2025-12-15
+21,A. Govindaraj,41,Male,IND,3,0,42.60,7.50,Diploma Mechanical,ACTIVE,2025-12-15
+22,S. Kanimozhi,38,Female,DMK,4,0,185.70,24.00,MA Economics,ACTIVE,2025-12-15
+23,M. Arunachalam,62,Male,AIADMK,4,0,310.20,48.00,B.Sc Agriculture,ACTIVE,2025-12-15
+24,B. Ponnusamy,44,Male,BJP,4,0,134.50,16.00,MBA Finance,ACTIVE,2025-12-15
+25,R. Sakthivel,51,Male,INC,4,1,220.80,35.00,BA Political Science,ACTIVE,2025-12-15
+26,K. Ilavarasan,28,Male,VCK,4,0,32.40,5.00,MA Sociology,ACTIVE,2025-12-15
+27,N. Ravichandran,47,Male,AIFB,4,0,95.60,13.00,B.E Civil,ACTIVE,2025-12-15
+28,P. Balamurugan,35,Male,IND,4,0,48.90,8.00,10th Standard,ACTIVE,2025-12-15
+29,T. Duraimurugan,65,Male,DMK,5,0,412.00,62.00,LLM,ACTIVE,2025-12-15
+30,K. Vanathi,45,Female,AIADMK,5,0,225.30,32.00,MA Public Admin,ACTIVE,2025-12-15
+31,R. Narayanan,50,Male,BJP,5,2,189.70,28.00,B.Com,ACTIVE,2025-12-15
+32,M. Chidambaram,56,Male,INC,5,0,278.90,42.00,BA Law,ACTIVE,2025-12-15
+33,L. Senthilkumar,32,Male,VCK,5,0,42.80,6.00,MA Human Rights,ACTIVE,2025-12-15
+34,S. Rajalakshmi,48,Female,AIFB,5,0,88.20,11.00,B.Sc Zoology,ACTIVE,2025-12-15
+35,A. Kumaravel,39,Male,IND,5,0,56.30,9.00,ITI Fitter,ACTIVE,2025-12-15
+36,N. Udhayakumar,43,Male,DMK,6,0,195.40,26.00,MA Tamil Literature,ACTIVE,2025-12-15
+37,V. Gnanasekaran,57,Male,AIADMK,6,1,268.70,38.00,B.Com,ACTIVE,2025-12-15
+38,S. Prabhakaran,41,Male,BJP,6,0,152.30,20.00,B.Tech IT,ACTIVE,2025-12-15
+39,K. Sumathi,46,Female,INC,6,0,178.60,24.00,BA Education,ACTIVE,2025-12-15
+40,R. Thirumavalavan,34,Male,VCK,6,0,48.90,7.00,MA Anthropology,ACTIVE,2025-12-15
+41,M. Ramamurthy,52,Male,AIFB,6,0,102.40,16.00,B.Sc Chemistry,ACTIVE,2025-12-15
+42,P. Tamilselvi,30,Female,IND,6,0,25.80,3.50,12th Standard,ACTIVE,2025-12-15
+43,D. Muthukumar,49,Male,DMK,7,0,234.50,34.00,MA Sociology,ACTIVE,2025-12-15
+44,R. Sasikala,52,Female,AIADMK,7,0,298.30,42.00,BA History,ACTIVE,2025-12-15
+45,K. Annamalai,38,Male,BJP,7,0,176.40,22.00,IPS (Retd),ACTIVE,2025-12-15
+46,S. Karti,42,Male,INC,7,0,345.60,48.00,MBA London,ACTIVE,2025-12-15
+47,V. Ravikumar,30,Male,VCK,7,0,35.20,5.00,LLB,ACTIVE,2025-12-15
+48,T. Sankaralingam,55,Male,AIFB,7,0,78.90,10.00,B.A Economics,ACTIVE,2025-12-15
+49,L. Kannappan,44,Male,IND,7,1,52.30,8.00,Diploma Electrical,ACTIVE,2025-12-15
+50,M. Palanisamy,54,Male,DMK,8,0,286.70,40.00,LLB,ACTIVE,2025-12-15
+51,K. Dhanalakshmi,47,Female,AIADMK,8,0,212.40,28.00,MA English,ACTIVE,2025-12-15
+52,R. Ravi,40,Male,BJP,8,0,145.80,18.00,B.E Mech,ACTIVE,2025-12-15
+53,S. Nehru,58,Male,INC,8,1,198.50,25.00,BA Political Science,ACTIVE,2025-12-15
+54,P. Vijaykumar,31,Male,VCK,8,0,42.60,6.00,MA Dalit Studies,ACTIVE,2025-12-15
+55,N. Dharmalingam,50,Male,AIFB,8,0,95.30,14.00,B.Sc Maths,ACTIVE,2025-12-15
+56,A. Ganesh,36,Male,IND,8,0,38.40,5.50,10th Standard,ACTIVE,2025-12-15
+57,T. Balaraman,46,Male,DMK,9,0,178.50,24.00,MBA,ACTIVE,2025-12-15
+58,M. Kumari,40,Female,AIADMK,9,0,156.30,20.00,BA Tamil,ACTIVE,2025-12-15
+59,P. Shekar,43,Male,BJP,9,0,112.70,14.00,B.Com,ACTIVE,2025-12-15
+60,R. Kannan,52,Male,INC,9,0,198.60,28.00,MA History,ACTIVE,2025-12-15
+61,K. Arul,29,Male,VCK,9,0,28.40,4.00,MA Social Work,ACTIVE,2025-12-15
+62,S. Subramani,48,Male,AIFB,9,0,72.30,10.00,B.Sc Physics,ACTIVE,2025-12-15
+63,V. Manikam,37,Male,IND,9,1,32.60,5.00,8th Standard,ACTIVE,2025-12-15
+64,N. Elangovam,50,Male,DMK,10,0,312.40,45.00,MA Economics,ACTIVE,2025-12-15
+65,R. Tamilselvi,44,Female,AIADMK,10,0,245.60,35.00,BA Sociology,ACTIVE,2025-12-15
+66,K. Nagarajan,42,Male,BJP,10,1,178.30,22.00,B.Tech,ACTIVE,2025-12-15
+67,M. Subbulakshmi,48,Female,INC,10,0,192.40,26.00,MA Public Admin,ACTIVE,2025-12-15
+68,S. Manickam,33,Male,VCK,10,0,45.80,7.00,LLB,ACTIVE,2025-12-15
+69,P. Ramasamy,56,Male,AIFB,10,0,98.70,15.00,B.Sc Chemistry,ACTIVE,2025-12-15
+70,T. Kathiravan,38,Male,IND,10,0,55.20,8.50,Diploma Civil,ACTIVE,2025-12-15
+71,R. Senthilkumar,45,Male,DMK,11,0,224.80,30.00,MA Political Science,ACTIVE,2025-12-15
+72,K. Ambika,50,Female,AIADMK,11,0,198.30,25.00,BA History,ACTIVE,2025-12-15
+73,M. Damodharan,47,Male,BJP,11,0,165.40,20.00,B.Com CA,ACTIVE,2025-12-15
+74,S. Vasanthi,43,Female,INC,11,0,152.70,18.00,MA Tamil,ACTIVE,2025-12-15
+75,V. Thirumavalavan,32,Male,VCK,11,0,38.90,5.50,MA Human Rights,ACTIVE,2025-12-15
+76,P. Natarajan,54,Male,AIFB,11,0,85.60,12.00,B.Sc Botany,ACTIVE,2025-12-15
+77,A. Dhanush,29,Male,IND,11,0,22.40,3.00,Graduate,ACTIVE,2025-12-15
+78,T. Murasoli,58,Male,DMK,12,0,345.60,50.00,LLB,ACTIVE,2025-12-15
+79,R. Jayanthi,46,Female,AIADMK,12,1,256.30,35.00,MA English,ACTIVE,2025-12-15
+80,K. Vanamamalai,44,Male,BJP,12,0,178.90,24.00,MBA,ACTIVE,2025-12-15
+81,M. Kandasamy,52,Male,INC,12,0,210.40,30.00,BA Law,ACTIVE,2025-12-15
+82,S. Bharathidasan,30,Male,VCK,12,0,42.50,6.00,MA Journalism,ACTIVE,2025-12-15
+83,P. Meenambal,48,Female,AIFB,12,0,92.70,13.00,B.Sc Maths,ACTIVE,2025-12-15
+84,N. Arumugam,40,Male,IND,12,0,58.30,9.00,Diploma Mech,ACTIVE,2025-12-15
+85,V. Kalaignar,48,Male,DMK,13,0,268.90,38.00,MA Economics,ACTIVE,2025-12-15
+86,R. Poongunran,55,Male,AIADMK,13,0,312.40,45.00,B.Sc Agriculture,ACTIVE,2025-12-15
+87,K. Subramaniam,42,Male,BJP,13,2,156.80,20.00,B.E EEE,ACTIVE,2025-12-15
+88,M. Radhika,38,Female,INC,13,0,134.50,16.00,MA Social Work,ACTIVE,2025-12-15
+89,S. Ilango,31,Male,VCK,13,0,48.60,7.00,LLB,ACTIVE,2025-12-15
+90,P. Velmurugan,50,Male,AIFB,13,0,88.40,12.00,B.Com,ACTIVE,2025-12-15
+91,T. Mahalakshmi,35,Female,IND,13,0,30.20,4.50,12th Standard,ACTIVE,2025-12-15
+92,N. Thamizharasan,52,Male,DMK,14,0,298.70,42.00,MBA,ACTIVE,2025-12-15
+93,R. Deepa,45,Female,AIADMK,14,0,234.50,32.00,MA Tamil,ACTIVE,2025-12-15
+94,K. Venkataraman,50,Male,BJP,14,1,198.60,28.00,B.Tech,ACTIVE,2025-12-15
+95,M. Saravanan,47,Male,INC,14,0,176.30,22.00,BA Political Science,ACTIVE,2025-12-15
+96,S. Pandiyan,29,Male,VCK,14,0,35.40,5.00,MA Dalit Studies,ACTIVE,2025-12-15
+97,P. Krishnaswamy,56,Male,AIFB,14,0,102.80,16.00,B.Sc Physics,ACTIVE,2025-12-15
+98,A. Shanmugavel,38,Male,IND,14,0,45.60,7.00,ITI Welder,ACTIVE,2025-12-15
+99,T. Muthuramalingam,55,Male,DMK,15,0,256.30,36.00,LLB,ACTIVE,2025-12-15
+100,K. Chitra,42,Female,AIADMK,15,0,198.70,25.00,MA Public Admin,ACTIVE,2025-12-15
+101,R. Sarath Kumar,48,Male,BJP,15,0,312.40,44.00,Graduate,ACTIVE,2025-12-15
+102,M. Selvamani,53,Male,INC,15,1,178.50,22.00,BA History,ACTIVE,2025-12-15
+103,S. Thenmozhi,34,Female,VCK,15,0,42.80,6.00,MA Anthropology,ACTIVE,2025-12-15
+104,P. Loganathan,50,Male,AIFB,15,0,88.90,12.00,B.Sc Chemistry,ACTIVE,2025-12-15
+105,N. Vinayagam,40,Male,IND,15,0,38.40,5.50,Diploma Electrical,ACTIVE,2025-12-15
+106,V. Udhayanidhi,35,Male,DMK,16,0,178.50,24.00,MBA,ACTIVE,2025-12-15
+107,R. Vaigaichelvan,58,Male,AIADMK,16,0,268.30,38.00,BA Economics,ACTIVE,2025-12-15
+108,K. Thirumaran,44,Male,BJP,16,0,145.60,18.00,B.E Computer Science,ACTIVE,2025-12-15
+109,M. Gomathi,40,Female,INC,16,0,132.80,15.00,MA English,ACTIVE,2025-12-15
+110,S. Karunanidhi,30,Male,VCK,16,0,35.60,5.00,LLB,ACTIVE,2025-12-15
+111,P. Sundaresan,52,Male,AIFB,16,0,95.40,14.00,B.Sc Maths,ACTIVE,2025-12-15
+112,A. Deivanayagam,42,Male,IND,16,3,62.30,9.50,10th Standard,ACTIVE,2025-12-15

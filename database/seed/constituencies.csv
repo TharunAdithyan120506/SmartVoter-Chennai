@@ -1,0 +1,17 @@
+constituency_id,name,type,region,total_voters,voted_count,returning_officer
+1,Thiruvottiyur,GENERAL,North,248543,142231,R. Subramaniam IAS
+2,Dr. Radhakrishnan Nagar,GENERAL,North,196234,98654,K. Vijayalakshmi IAS
+3,Perambur,GENERAL,North,232891,118432,S. Muthuraman IAS
+4,Kolathur,GENERAL,North,218765,109876,P. Chandrasekaran IAS
+5,Villivakkam,GENERAL,North,241309,134200,A. Rajeswari IAS
+6,Thiru-Vi-Ka Nagar,GENERAL,Central,187654,89543,N. Gopinath IAS
+7,Egmore,SC,Central,165432,76123,C. Saroja IAS
+8,Chennai Central,GENERAL,Central,198234,101234,M. Krishnamurthy IAS
+9,Harbour,GENERAL,Central,143298,68432,T. Balasubramanian IAS
+10,Thousand Lights,GENERAL,Central,176543,94321,B. Nithyakalyani IAS
+11,Chepauk-Thiruvallikeni,GENERAL,Central,189432,97654,V. Arumugam IAS
+12,Mylapore,GENERAL,South,221543,118765,G. Meenakshisundaram IAS
+13,Velachery,GENERAL,South,267891,143456,D. Karthikeyan IAS
+14,Shozhinganallur,GENERAL,South,312456,159876,R. Anandhi IAS
+15,Alandur,GENERAL,South,234567,126543,S. Prakash IAS
+16,Saidapet,SC,Central,178943,91234,L. Jayapriya IAS

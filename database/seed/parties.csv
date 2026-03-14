@@ -1,0 +1,8 @@
+party_id,name,abbr,color_code,alliance,founded_year,symbol_desc
+DMK,Dravida Munnetra Kazhagam,DMK,#dc2626,INDIA,1949,Rising Sun
+AIADMK,All India Anna Dravida Munnetra Kazhagam,AIADMK,#16a34a,NDA,1972,Two Leaves
+BJP,Bharatiya Janata Party,BJP,#ea580c,NDA,1980,Lotus
+INC,Indian National Congress,INC,#2563eb,INDIA,1885,Hand
+VCK,Viduthalai Chiruthaigal Katchi,VCK,#7c3aed,INDIA,1999,Star
+AIFB,All India Forward Bloc,AIFB,#0891b2,Left,1939,Lion
+IND,Independent,IND,#6b7280,None,0,None

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter List — Admin Portal</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🛡️ Admin Portal<span>Election Commission</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
+                <a href="voters.html" class="nav-item active"><span class="icon">👥</span> Voter List</a>
+                <a href="candidates.html" class="nav-item"><span class="icon">🏛️</span> Candidates</a>
+                <a href="polling.html" class="nav-item"><span class="icon">🗳️</span> Polling Mode</a>
+                <a href="results.html" class="nav-item"><span class="icon">📈</span> Results</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">👥 Voter List</h1>
+                <p class="page-subtitle">Search, view, and edit voter records</p>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <input type="text" class="table-search" id="search-input"
+                        placeholder="Search by name, voter ID, or Aadhar..." oninput="debounceSearch()">
+                    <span class="text-xs text-muted" id="total-label">—</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Voter ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Constituency</th>
+                            <th>Voted</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="voters-table"></tbody>
+                </table>
+                <div class="table-pagination">
+                    <span id="page-info">—</span>
+                    <div class="pagination-btns">
+                        <button id="prev-btn" onclick="changePage(-1)" disabled>← Prev</button>
+                        <button id="next-btn" onclick="changePage(1)" disabled>Next →</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay hidden" id="edit-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Voter</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-input" id="edit-name">
+            </div>
+            <div class="form-group">
+                <label>Phone</label>
+                <input type="text" class="form-input" id="edit-phone" maxlength="10">
+            </div>
+            <div class="form-group">
+                <label>Address</label>
+                <textarea class="form-input" id="edit-address" rows="3" style="resize:vertical;"></textarea>
+            </div>
+            <div class="flex gap-2" style="justify-content:flex-end;">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="save-btn" onclick="saveVoter()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let searchTimeout = null;
+        let editingVoterId = null;
+
+        async function loadVoters() {
+            const search = document.getElementById('search-input').value.trim();
+            const res = await api('GET', `/api/admin/voters?page=${currentPage}&limit=20&search=${encodeURIComponent(search)}`);
+            if (!res || !res.success) return;
+
+            totalPages = res.pages;
+            document.getElementById('total-label').textContent = `${res.total} voters`;
+            document.getElementById('page-info').textContent = `Page ${res.page} of ${res.pages}`;
+            document.getElementById('prev-btn').disabled = currentPage <= 1;
+            document.getElementById('next-btn').disabled = currentPage >= totalPages;
+
+            const tbody = document.getElementById('voters-table');
+            tbody.innerHTML = res.voters.map(v => {
+                const votedBadge = v.has_voted
+                    ? '<span class="badge badge-voted">✓ Voted</span>'
+                    : '<span class="badge badge-not-voted">Pending</span>';
+                return `<tr>
+          <td class="mono" style="font-size:0.75rem;">${v.voter_id}</td>
+          <td style="font-weight:600; color:var(--text1);">${v.name}</td>
+          <td>${v.age}</td>
+          <td>${v.gender}</td>
+          <td>${v.constituency_name}</td>
+          <td>${votedBadge}</td>
+          <td><button class="btn btn-secondary btn-sm" onclick="editVoter('${v.voter_id}', '${v.name.replace(/'/g, "\\'")}', '${v.phone}', '${v.address.replace(/'/g, "\\'")}')">✏️ Edit</button></td>
+        </tr>`;
+            }).join('');
+        }
+
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentPage = 1;
+                loadVoters();
+            }, 400);
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            loadVoters();
+        }
+
+        function editVoter(voterId, name, phone, address) {
+            editingVoterId = voterId;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-phone').value = phone;
+            document.getElementById('edit-address').value = address;
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+            editingVoterId = null;
+        }
+
+        async function saveVoter() {
+            if (!editingVoterId) return;
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const res = await api('PUT', `/api/admin/voters/${encodeURIComponent(editingVoterId)}`, {
+                name: document.getElementById('edit-name').value,
+                phone: document.getElementById('edit-phone').value,
+                address: document.getElementById('edit-address').value,
+            });
+
+            btn.disabled = false;
+            btn.textContent = 'Save Changes';
+
+            if (res && res.success) {
+                showToast('Voter updated successfully!', 'success');
+                closeModal();
+                loadVoters();
+            } else {
+                showToast(res?.error || 'Failed to update voter', 'error');
+            }
+        }
+
+        async function init() {
+            const data = await requireAdminAuth();
+            if (!data) return;
+            loadVoters();
+        }
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+admin_id,username,password_hash,name,role,constituency_id
+1,admin,pbkdf2:sha256:admin123,Chief Election Officer,SUPER_ADMIN,
+2,booth_officer_3,pbkdf2:sha256:booth003,S. Ramachandran,BOOTH_ADMIN,3
+3,booth_officer_7,pbkdf2:sha256:booth007,K. Suganya,BOOTH_ADMIN,7
+4,booth_officer_16,pbkdf2:sha256:booth016,P. Murugan,BOOTH_ADMIN,16
+5,results_officer,pbkdf2:sha256:results1,T. Alamelu,SUPER_ADMIN,

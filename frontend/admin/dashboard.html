@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — Chennai Elections 2026</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+</head>
+
+<body>
+    <div class="grid-bg"></div>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">🛡️ Admin Portal<span>Election Commission</span></div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item active"><span class="icon">📊</span> Dashboard</a>
+                <a href="voters.html" class="nav-item"><span class="icon">👥</span> Voter List</a>
+                <a href="candidates.html" class="nav-item"><span class="icon">🏛️</span> Candidates</a>
+                <a href="polling.html" class="nav-item"><span class="icon">🗳️</span> Polling Mode</a>
+                <a href="results.html" class="nav-item"><span class="icon">📈</span> Results</a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">📊 Election Dashboard</h1>
+                <p class="page-subtitle">Real-time overview of the 2026 Chennai elections</p>
+            </div>
+
+            <!-- Stat Cards -->
+            <div class="stat-cards" id="stat-cards">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="s-voters">—</div>
+                    <div class="stat-label">Total Voters</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🗳️</div>
+                    <div class="stat-value" id="s-voted">—</div>
+                    <div class="stat-label">Votes Cast</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="s-pct">—</div>
+                    <div class="stat-label">Polling %</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🗺️</div>
+                    <div class="stat-value" id="s-const">—</div>
+                    <div class="stat-label">Constituencies</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏛️</div>
+                    <div class="stat-value" id="s-cand">—</div>
+                    <div class="stat-label">Candidates</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏢</div>
+                    <div class="stat-value" id="s-booths">—</div>
+                    <div class="stat-label">Booths</div>
+                </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="chart-container">
+                <h3 style="font-size:0.95rem; font-weight:600; margin-bottom:16px;">Turnout by Constituency</h3>
+                <canvas id="turnout-chart" height="100"></canvas>
+            </div>
+
+            <!-- Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 style="font-size:0.95rem; font-weight:600;">Constituency Details</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Constituency</th>
+                            <th>Type</th>
+                            <th>Region</th>
+                            <th>Total Voters</th>
+                            <th>Voted</th>
+                            <th>Turnout</th>
+                        </tr>
+                    </thead>
+                    <tbody id="turnout-table"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script>
+        async function init() {
+            const data = await requireAdminAuth();
+            if (!data) return;
+
+            const s = data.summary;
+            document.getElementById('s-voters').textContent = formatNumber(s.total_voters);
+            document.getElementById('s-voted').textContent = formatNumber(s.total_voted);
+            document.getElementById('s-pct').textContent = s.overall_turnout + '%';
+            document.getElementById('s-const').textContent = s.total_constituencies;
+            document.getElementById('s-cand').textContent = s.total_candidates;
+            document.getElementById('s-booths').textContent = s.total_booths;
+
+            const turnout = data.turnout;
+            const regionColors = { North: '#06b6d4', Central: '#8b5cf6', South: '#10b981' };
+
+            // Chart
+            new Chart(document.getElementById('turnout-chart'), {
+                type: 'bar',
+                data: {
+                    labels: turnout.map(t => t.name),
+                    datasets: [{
+                        label: 'Turnout %',
+                        data: turnout.map(t => t.turnout_percent || 0),
+                        backgroundColor: turnout.map(t => regionColors[t.region] || '#6b7280'),
+                        borderRadius: 6,
+                        barThickness: 20,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1f2937',
+                            titleColor: '#fff',
+                            bodyColor: '#94a3b8',
+                            borderColor: 'rgba(255,255,255,0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#475569', font: { size: 9, family: 'Sora' }, maxRotation: 45 },
+                            grid: { color: 'rgba(255,255,255,0.03)' }
+                        },
+                        y: {
+                            ticks: { color: '#475569', font: { family: 'Sora' }, callback: v => v + '%' },
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Table
+            const tbody = document.getElementById('turnout-table');
+            tbody.innerHTML = turnout.map((t, i) => {
+                const pct = t.turnout_percent || 0;
+                const typeBadge = t.type === 'SC' ? '<span class="badge badge-sc">SC</span>' : '<span class="badge badge-general">GEN</span>';
+                return `<tr>
+          <td>${t.constituency_id}</td>
+          <td style="font-weight:600; color:var(--text1);">${t.name}</td>
+          <td>${typeBadge}</td>
+          <td>${t.region}</td>
+          <td>${formatNumber(t.total_voters)}</td>
+          <td>${formatNumber(t.voted_count)}</td>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="progress-bar" style="width:80px;">
+                <div class="progress-fill" style="width:${pct}%; background:${regionColors[t.region]};"></div>
+              </div>
+              <span style="font-size:0.8rem; font-weight:600;">${pct}%</span>
+            </div>
+          </td>
+        </tr>`;
+            }).join('');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
