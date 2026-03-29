@@ -4,40 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polling Mode — Admin Portal</title>
+    <title>Polling Mode — Administrative Portal</title>
+    <meta name="description" content="Polling station operations — Chennai District Elections 2026">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
-    <div class="grid-bg"></div>
     <div class="layout">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">🛡️ Admin Portal<span>Election Commission</span></div>
+                <div class="sidebar-logo">
+                    <div class="logo-emblem">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        Administrative Portal
+                        <span>Election Commission of India</span>
+                    </div>
+                </div>
             </div>
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
-                <a href="voters.html" class="nav-item"><span class="icon">👥</span> Voter List</a>
-                <a href="candidates.html" class="nav-item"><span class="icon">🏛️</span> Candidates</a>
-                <a href="polling.html" class="nav-item active"><span class="icon">🗳️</span> Polling Mode</a>
-                <a href="results.html" class="nav-item"><span class="icon">📈</span> Results</a>
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                    Dashboard
+                </a>
+                <a href="voters.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+                    Voter List
+                </a>
+                <a href="candidates.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg></span>
+                    Candidates
+                </a>
+                <a href="polling.html" class="nav-item active">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+                    Polling Mode
+                </a>
+                <a href="results.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+                    Results
+                </a>
             </nav>
             <div class="sidebar-footer">
-                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
             </div>
         </aside>
 
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">🗳️ Polling Mode</h1>
-                <p class="page-subtitle">Verify voter identity and record votes</p>
+                <h1 class="page-title">Polling Mode</h1>
+                <p class="page-subtitle">Verify voter identity and record votes at the polling station</p>
             </div>
 
             <!-- Wizard Steps -->
             <div class="wizard-steps">
                 <div class="wizard-step active" id="ws-1">
                     <div class="wizard-step-num">1</div>
-                    <span class="wizard-step-label">Scan Voter</span>
+                    <span class="wizard-step-label">Verify Voter</span>
                 </div>
                 <div class="wizard-line" id="wl-1"></div>
                 <div class="wizard-step" id="ws-2">
@@ -56,14 +81,16 @@
                 </div>
             </div>
 
-            <!-- Step 1: Scan Voter QR -->
-            <div id="step-1" class="glass-card" style="max-width:560px; margin:0 auto; text-align:center;">
+            <!-- Step 1: Verify Voter -->
+            <div id="step-1" class="glass-card" style="max-width:560px; margin:0 auto; text-align:center; border-top:4px solid var(--navy);">
                 <div class="scan-area">
                     <div class="scan-line"></div>
-                    <div class="scan-icon">📱</div>
-                    <span class="text-xs text-muted">Scan QR Code</span>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#003580" stroke-width="1.5" opacity="0.3">
+                        <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+                    </svg>
+                    <span style="font-size:var(--text-xs); color:var(--text-secondary);">Scan QR Code</span>
                 </div>
-                <p class="text-muted text-sm mb-3">— or enter manually —</p>
+                <p style="color:var(--text-secondary); font-size:var(--text-sm); margin-bottom:12px;">— or enter Voter ID manually —</p>
                 <div class="form-group" style="max-width:350px; margin:0 auto;">
                     <input type="text" class="form-input mono" id="voter-id-input"
                         placeholder="Enter Voter ID (e.g. TN/24/03/001234)" style="text-align:center;">
@@ -76,20 +103,19 @@
             <!-- Step 2: Select Candidate -->
             <div id="step-2" class="hidden" style="max-width:700px; margin:0 auto;">
                 <!-- Verified Voter Banner -->
-                <div class="glass-card mb-4" style="background:var(--green-glow); border-color:rgba(16,185,129,0.3);">
+                <div class="verified-banner mb-4">
                     <div class="flex items-center gap-3">
-                        <span style="font-size:1.5rem;">✅</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#138808" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                         <div>
-                            <div style="font-size:0.95rem; font-weight:700; color:var(--green);">Voter Verified</div>
-                            <div class="text-sm text-muted">
-                                <span id="v-name">—</span> · <span id="v-const">—</span> · Booth: <span
-                                    id="v-booth">—</span>
+                            <div style="font-size:var(--text-base); font-weight:700; color:var(--green);">Voter Verified</div>
+                            <div style="font-size:var(--text-sm); color:var(--text-secondary);">
+                                <span id="v-name">—</span> &middot; <span id="v-const">—</span> &middot; Booth: <span id="v-booth">—</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <h3 style="font-size:0.95rem; font-weight:600; margin-bottom:16px;">Select a Candidate</h3>
+                <h3 style="font-family:'Noto Serif',serif; font-size:var(--text-base); font-weight:600; margin-bottom:16px; color:var(--navy);">Select a Candidate</h3>
                 <div class="candidate-grid" id="candidate-grid"></div>
 
                 <div style="text-align:center; margin-top:24px;">
@@ -101,39 +127,43 @@
 
             <!-- Step 3: Confirmation -->
             <div id="step-3" class="hidden" style="max-width:480px; margin:0 auto; text-align:center;">
-                <div style="font-size:3rem; margin-bottom:16px;">⚠️</div>
-                <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">Confirm Your Vote</h2>
-                <p class="text-muted text-sm mb-4">This action cannot be undone</p>
+                <div style="margin-bottom:16px;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <h2 style="font-family:'Noto Serif',serif; font-size:var(--text-xl); font-weight:700; color:var(--navy); margin-bottom:8px;">Confirm Vote</h2>
+                <p style="color:var(--text-secondary); font-size:var(--text-sm); margin-bottom:20px;">This action cannot be undone. Please verify the details below.</p>
 
-                <div class="glass-card mb-4" style="text-align:left;">
+                <div class="glass-card mb-4" style="text-align:left; border-top:4px solid var(--saffron);">
                     <div class="flex justify-between mb-3">
-                        <span class="text-muted text-sm">Voter</span>
-                        <span class="text-sm font-bold" id="c-voter">—</span>
+                        <span style="color:var(--text-secondary); font-size:var(--text-sm);">Voter</span>
+                        <span style="font-size:var(--text-sm); font-weight:700;" id="c-voter">—</span>
                     </div>
                     <div class="flex justify-between mb-3">
-                        <span class="text-muted text-sm">Candidate</span>
-                        <span class="text-sm font-bold" id="c-candidate">—</span>
+                        <span style="color:var(--text-secondary); font-size:var(--text-sm);">Candidate</span>
+                        <span style="font-size:var(--text-sm); font-weight:700;" id="c-candidate">—</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-muted text-sm">Party</span>
-                        <span class="text-sm" id="c-party">—</span>
+                        <span style="color:var(--text-secondary); font-size:var(--text-sm);">Party</span>
+                        <span style="font-size:var(--text-sm);" id="c-party">—</span>
                     </div>
                 </div>
 
                 <div class="flex gap-3" style="justify-content:center;">
-                    <button class="btn btn-secondary btn-lg" onclick="goBack()">← Go Back</button>
-                    <button class="btn btn-success btn-lg" id="cast-btn" onclick="castVote()">🗳️ Cast Vote</button>
+                    <button class="btn btn-secondary btn-lg" onclick="goBack()">&larr; Go Back</button>
+                    <button class="btn btn-success btn-lg" id="cast-btn" onclick="castVote()">Record Vote</button>
                 </div>
             </div>
 
             <!-- Step 4: Done -->
             <div id="step-4" class="hidden" style="max-width:480px; margin:0 auto; text-align:center;">
-                <div class="success-check">✓</div>
-                <h2 style="font-size:1.3rem; font-weight:700; margin-bottom:8px;">Vote Recorded Successfully</h2>
-                <p class="text-muted text-sm mb-4">The voter has been marked and the vote has been securely recorded.
-                </p>
+                <div class="success-check">&#10003;</div>
+                <h2 style="font-family:'Noto Serif',serif; font-size:var(--text-xl); font-weight:700; color:var(--navy); margin-bottom:8px;">Vote Recorded Successfully</h2>
+                <p style="color:var(--text-secondary); font-size:var(--text-sm); margin-bottom:20px;">The voter has been marked and the vote has been securely recorded in the system.</p>
                 <button class="btn btn-primary btn-lg" onclick="resetWizard()">
-                    → Next Voter
+                    Proceed to Next Voter &rarr;
                 </button>
             </div>
         </main>
@@ -181,16 +211,15 @@
             document.getElementById('v-const').textContent = verifiedVoter.constituency_name;
             document.getElementById('v-booth').textContent = verifiedVoter.booth_name;
 
-            // Render candidate cards
             const grid = document.getElementById('candidate-grid');
             grid.innerHTML = candidates.map(c => `
         <div class="candidate-select-card" data-id="${c.candidate_id}" onclick="selectCandidate(${c.candidate_id})">
           <div class="flex items-center gap-3 mb-2">
             <span class="party-dot" style="background:${c.color_code}; width:14px; height:14px;"></span>
-            <span style="font-size:0.8rem; font-weight:700; color:${c.color_code};">${c.party_abbr}</span>
+            <span style="font-size:var(--text-sm); font-weight:700; color:${c.color_code};">${c.party_abbr}</span>
           </div>
-          <div style="font-size:0.95rem; font-weight:600;">${c.name}</div>
-          <div class="text-xs text-muted">${c.party_name} · Age ${c.age}</div>
+          <div style="font-size:var(--text-base); font-weight:600; color:var(--text-primary);">${c.name}</div>
+          <div style="font-size:var(--text-xs); color:var(--text-secondary);">${c.party_name} &middot; Age ${c.age}</div>
         </div>
       `).join('');
 
@@ -199,23 +228,20 @@
             document.getElementById('confirm-btn').disabled = true;
 
             setStep(2);
-            showToast('Voter verified successfully!', 'success');
+            showToast('Voter verified successfully', 'success');
         }
 
         function selectCandidate(id) {
             selectedCandidateId = id;
             selectedCandidate = candidates.find(c => c.candidate_id === id);
 
-            // Update card styles
             document.querySelectorAll('.candidate-select-card').forEach(card => {
                 const isSelected = parseInt(card.dataset.id) === id;
                 card.classList.toggle('selected', isSelected);
                 if (isSelected) {
                     card.style.borderColor = selectedCandidate.color_code;
-                    card.style.boxShadow = `0 0 20px ${selectedCandidate.color_code}33`;
                 } else {
                     card.style.borderColor = '';
-                    card.style.boxShadow = '';
                 }
             });
 
@@ -247,13 +273,13 @@
             });
 
             btn.disabled = false;
-            btn.textContent = '🗳️ Cast Vote';
+            btn.textContent = 'Record Vote';
 
             if (res && res.success) {
                 setStep(4);
-                showToast('Vote cast successfully!', 'success');
+                showToast('Vote recorded successfully', 'success');
             } else {
-                showToast(res?.error || 'Failed to cast vote', 'error');
+                showToast(res?.error || 'Failed to record vote', 'error');
             }
         }
 
@@ -266,7 +292,6 @@
             setStep(1);
         }
 
-        // Enter key to verify
         document.getElementById('voter-id-input')?.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') verifyVoter();
         });

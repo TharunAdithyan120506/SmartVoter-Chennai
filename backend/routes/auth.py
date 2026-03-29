@@ -60,9 +60,12 @@ def send_otp():
     db = get_db()
     cursor = db.cursor()
     args = [aadhar, otp_hashed, '']  # OUT param placeholder
-    result = cursor.callproc('generate_otp_session', args)
-    session_id = result[2]  # The OUT parameter
-    db.commit()
+    cursor.callproc('generate_otp_session', args)
+
+    # Retrieve the OUT parameter via MySQL session variable
+    cursor.execute("SELECT @_generate_otp_session_2 AS session_id")
+    out_row = cursor.fetchone()
+    session_id = out_row[0] if out_row else None
     cursor.close()
 
     # Mask phone number

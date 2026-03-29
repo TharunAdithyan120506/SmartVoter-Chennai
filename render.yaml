@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: election-portal-api
+    runtime: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: MYSQL_HOST
+        fromDatabase:
+          name: election-db
+          property: host
+      - key: MYSQL_USER
+        fromDatabase:
+          name: election-db
+          property: user
+      - key: MYSQL_PASSWORD
+        fromDatabase:
+          name: election-db
+          property: password
+      - key: MYSQL_DB
+        fromDatabase:
+          name: election-db
+          property: database
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MOCK_OTP
+        value: "True"
+    dockerContext: ./backend
+    dockerfilePath: Dockerfile
+
+databases:
+  - name: election-db
+    plan: free
+    region: oregon
+    databaseName: election_db
+    user: root

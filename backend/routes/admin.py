@@ -236,7 +236,7 @@ def polling_verify():
 @admin_bp.route('/polling/vote', methods=['POST'])
 @admin_required
 def polling_vote():
-    """Cast a vote using the cast_vote stored procedure."""
+    """Cast a vote — direct SQL to avoid stored procedure transaction conflicts."""
     data = request.get_json()
     if not data:
         return jsonify({'success': False, 'error': 'Request body is required'}), 400
@@ -250,28 +250,82 @@ def polling_vote():
 
     try:
         db = get_db()
-        cursor = db.cursor()
-        args = [voter_id, int(candidate_id), int(admin_id), '']
-        result = cursor.callproc('cast_vote', args)
-        p_result = result[3]  # OUT parameter
-        db.commit()
-        cursor.close()
 
-        if p_result and p_result.startswith('SUCCESS'):
+        # Temporarily disable autocommit for an atomic transaction
+        db.autocommit = False
+        cursor = db.cursor(dictionary=True)
+
+        try:
+            # 1. Validate voter exists and hasn't voted
+            cursor.execute(
+                "SELECT constituency_id, booth_id, has_voted FROM voters WHERE voter_id = %s FOR UPDATE",
+                (voter_id,)
+            )
+            voter = cursor.fetchone()
+
+            if not voter:
+                db.rollback()
+                return jsonify({'success': False, 'error': 'Voter not found'}), 404
+
+            if voter['has_voted']:
+                db.rollback()
+                return jsonify({'success': False, 'error': 'Voter has already cast their vote'}), 400
+
+            v_constituency_id = voter['constituency_id']
+            v_booth_id = voter['booth_id']
+
+            # 2. Validate candidate is in the same constituency
+            cursor.execute(
+                "SELECT constituency_id FROM candidates WHERE candidate_id = %s AND status = 'ACTIVE'",
+                (int(candidate_id),)
+            )
+            cand = cursor.fetchone()
+
+            if not cand:
+                db.rollback()
+                return jsonify({'success': False, 'error': 'Candidate not found or not active'}), 400
+
+            if cand['constituency_id'] != v_constituency_id:
+                db.rollback()
+                return jsonify({'success': False, 'error': 'Candidate not in voter constituency'}), 400
+
+            # 3. Insert vote record
+            cursor.execute(
+                """INSERT INTO votes (voter_id, candidate_id, constituency_id, booth_id, admin_id)
+                   VALUES (%s, %s, %s, %s, %s)""",
+                (voter_id, int(candidate_id), v_constituency_id, v_booth_id, int(admin_id))
+            )
+
+            # 4. Mark voter as voted
+            cursor.execute(
+                "UPDATE voters SET has_voted = TRUE WHERE voter_id = %s",
+                (voter_id,)
+            )
+
+            # 5. Update constituency turnout count
+            cursor.execute(
+                "UPDATE constituencies SET voted_count = voted_count + 1 WHERE constituency_id = %s",
+                (v_constituency_id,)
+            )
+
+            db.commit()
+            cursor.close()
+            db.autocommit = True
+
             return jsonify({'success': True, 'message': 'Vote recorded successfully'})
-        else:
-            return jsonify({'success': False, 'error': p_result or 'Vote failed'}), 400
+
+        except Exception as inner_e:
+            db.rollback()
+            db.autocommit = True
+            cursor.close()
+            raise inner_e
+
     except Exception as e:
         error_msg = str(e)
-        if '45000' in error_msg:
-            # Extract the custom error message
-            if 'already' in error_msg.lower():
-                return jsonify({'success': False, 'error': 'Voter has already cast their vote'}), 400
-            elif 'not in voter' in error_msg.lower():
-                return jsonify({'success': False, 'error': 'Candidate not in voter constituency'}), 400
-            else:
-                return jsonify({'success': False, 'error': error_msg}), 400
-        return jsonify({'success': False, 'error': 'An error occurred while casting vote'}), 500
+        print(f"[VOTE ERROR] {error_msg}")
+        if 'already' in error_msg.lower() or 'Duplicate' in error_msg:
+            return jsonify({'success': False, 'error': 'Voter has already cast their vote'}), 400
+        return jsonify({'success': False, 'error': f'An error occurred while casting vote: {error_msg}'}), 500
 
 
 @admin_bp.route('/results', methods=['GET'])

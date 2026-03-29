@@ -2,7 +2,7 @@
    API Fetch Wrapper — Chennai Election Portal
    ============================================================ */
 
-const API_BASE = 'http://localhost:5000';
+const API_BASE = '';
 
 async function api(method, path, body = null) {
     const opts = {

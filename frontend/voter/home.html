@@ -4,43 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Constituency Map — Chennai Elections 2026</title>
+    <title>Constituency Map — Chennai Election Portal</title>
+    <meta name="description" content="Interactive constituency map of Chennai District for the 2026 Legislative Assembly Elections">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
-    <div class="grid-bg"></div>
     <div class="layout">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    🗳️ Chennai Elections
-                    <span>2026 Legislative Assembly</span>
+                    <div class="logo-emblem">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="none" stroke="white" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="2"/>
+                            <line x1="50" y1="2" x2="50" y2="30" stroke="white" stroke-width="2"/>
+                            <line x1="50" y1="70" x2="50" y2="98" stroke="white" stroke-width="2"/>
+                            <line x1="2" y1="50" x2="30" y2="50" stroke="white" stroke-width="2"/>
+                            <line x1="70" y1="50" x2="98" y2="50" stroke="white" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="6" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        Chennai Elections
+                        <span>2026 Legislative Assembly</span>
+                    </div>
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <a href="home.html" class="nav-item active"><span class="icon">🗺️</span> Constituency Map</a>
-                <a href="evoter.html" class="nav-item"><span class="icon">🪪</span> E-Voter Card</a>
-                <a href="profile.html" class="nav-item"><span class="icon">👤</span> My Profile</a>
+                <a href="home.html" class="nav-item active">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                    Constituency Map
+                </a>
+                <a href="evoter.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+                    E-Voter Card
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    My Profile
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <div class="voter-chip" id="voter-chip">
-                    <div class="voter-chip-avatar">👤</div>
+                    <div class="voter-chip-avatar" id="voter-avatar">—</div>
                     <div class="voter-chip-info">
                         <div class="voter-chip-name" id="voter-name">Loading...</div>
                         <div class="voter-chip-id" id="voter-id">—</div>
                     </div>
                 </div>
-                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">🗺️ Chennai Constituency Map</h1>
-                <p class="page-subtitle">Click on any constituency to view candidates and details</p>
+                <h1 class="page-title">Chennai Constituency Map</h1>
+                <p class="page-subtitle">Select any constituency to view candidates and electoral details</p>
             </div>
 
             <div style="display:flex; gap:0; position:relative;">
@@ -54,13 +76,13 @@
 
     <!-- Right Slide Panel (Constituency Info) -->
     <div class="slide-panel" id="constituency-panel">
-        <button class="panel-close" onclick="closePanel()">✕</button>
+        <button class="panel-close" onclick="closePanel()" aria-label="Close panel">&times;</button>
         <div id="panel-content"></div>
     </div>
 
     <!-- Detail Panel (Candidate Detail) -->
     <div class="detail-panel" id="candidate-panel">
-        <button class="panel-close" onclick="closeDetailPanel()">✕</button>
+        <button class="panel-close" onclick="closeDetailPanel()" aria-label="Close detail">&times;</button>
         <div id="detail-content"></div>
     </div>
 
@@ -85,10 +107,11 @@
             { id: 14, d: "M4,294 L276,308 L276,378 L4,370Z", lx: 140, ly: 338, name: "Shozhinganallur" },
         ];
 
+        /* GOI-appropriate soft muted palette */
         const COLORS = [
-            '#06b6d4', '#8b5cf6', '#f43f5e', '#10b981', '#f59e0b', '#6366f1',
-            '#ec4899', '#14b8a6', '#ef4444', '#3b82f6', '#a855f7', '#f97316',
-            '#22c55e', '#0ea5e9', '#e11d48', '#eab308'
+            '#1A4DA2', '#2E7D32', '#E65100', '#5C6BC0', '#00838F', '#AD1457',
+            '#4527A0', '#00695C', '#BF360C', '#1565C0', '#6A1B9A', '#E65100',
+            '#2E7D32', '#0277BD', '#C62828', '#F9A825'
         ];
 
         let voterData = null;
@@ -101,9 +124,10 @@
             document.getElementById('voter-name').textContent = voterData.name;
             document.getElementById('voter-id').textContent = voterData.voter_id;
 
-            // Set avatar based on gender
-            const avatarEl = document.querySelector('.voter-chip-avatar');
-            avatarEl.textContent = voterData.gender === 'Female' ? '👩' : '👨';
+            // Set avatar initials
+            const avatarEl = document.getElementById('voter-avatar');
+            const initials = voterData.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+            avatarEl.textContent = initials;
 
             // Load constituencies
             const res = await api('GET', '/api/constituencies');
@@ -117,7 +141,6 @@
             const svg = document.getElementById('map-svg');
             svg.innerHTML = '';
 
-            // Find voter's constituency
             const voterConstId = voterData ? parseInt(voterData.voter_id?.split('/')[2]) : -1;
 
             MAP_PATHS.forEach((mp, idx) => {
@@ -125,34 +148,31 @@
                 const isVoterConst = mp.id === voterConstId;
                 const color = COLORS[idx % COLORS.length];
 
-                // Create path
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 path.setAttribute('d', mp.d);
                 path.setAttribute('fill', color);
-                path.setAttribute('fill-opacity', isVoterConst ? '0.6' : '0.25');
-                path.setAttribute('stroke', isVoterConst ? color : 'rgba(255,255,255,0.2)');
+                path.setAttribute('fill-opacity', isVoterConst ? '0.5' : '0.2');
+                path.setAttribute('stroke', isVoterConst ? color : '#003580');
                 path.setAttribute('stroke-width', isVoterConst ? '2.5' : '1');
+                path.setAttribute('stroke-opacity', isVoterConst ? '1' : '0.3');
                 path.setAttribute('data-id', mp.id);
                 path.style.cursor = 'pointer';
-                path.style.transition = 'all 0.3s ease';
-
-                if (isVoterConst) {
-                    path.style.filter = `drop-shadow(0 0 8px ${color})`;
-                }
+                path.style.transition = 'all 0.25s ease';
 
                 path.addEventListener('mouseenter', () => {
-                    path.setAttribute('fill-opacity', '0.45');
+                    path.setAttribute('fill-opacity', '0.4');
                     path.setAttribute('stroke-width', '2');
+                    path.setAttribute('stroke-opacity', '0.8');
                 });
                 path.addEventListener('mouseleave', () => {
-                    path.setAttribute('fill-opacity', isVoterConst ? '0.6' : '0.25');
+                    path.setAttribute('fill-opacity', isVoterConst ? '0.5' : '0.2');
                     path.setAttribute('stroke-width', isVoterConst ? '2.5' : '1');
+                    path.setAttribute('stroke-opacity', isVoterConst ? '1' : '0.3');
                 });
                 path.addEventListener('click', () => openPanel(mp.id, constData, color));
 
                 svg.appendChild(path);
 
-                // Label
                 const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 text.setAttribute('x', mp.lx);
                 text.setAttribute('y', mp.ly);
@@ -173,47 +193,46 @@
 
             content.innerHTML = `
         <div style="margin-top:20px;">
-          <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:4px;">${constData?.name || 'Unknown'}</h2>
+          <h2 style="font-family:'Noto Serif',serif; font-size:var(--text-xl); font-weight:700; color:var(--navy); margin-bottom:4px;">${constData?.name || 'Unknown'}</h2>
           <div class="flex items-center gap-2 mb-3">
             ${typeBadge}
-            <span class="text-xs text-muted">${constData?.region || ''} Chennai</span>
+            <span style="font-size:var(--text-xs); color:var(--text-secondary);">${constData?.region || ''} Chennai</span>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
-            <div class="glass-card" style="padding:14px;">
-              <div style="font-size:1.3rem; font-weight:800; color:var(--accent);">${formatNumber(constData?.total_voters || 0)}</div>
-              <div class="text-xs text-muted">Total Voters</div>
+            <div class="glass-card" style="padding:14px; border-top:3px solid var(--navy);">
+              <div style="font-family:'Noto Serif',serif; font-size:1.3rem; font-weight:700; color:var(--navy);">${formatNumber(constData?.total_voters || 0)}</div>
+              <div style="font-size:var(--text-xs); color:var(--text-secondary);">Total Voters</div>
             </div>
-            <div class="glass-card" style="padding:14px;">
-              <div style="font-size:1.3rem; font-weight:800; color:var(--green);">${turnout}%</div>
-              <div class="text-xs text-muted">Turnout</div>
+            <div class="glass-card" style="padding:14px; border-top:3px solid var(--green);">
+              <div style="font-family:'Noto Serif',serif; font-size:1.3rem; font-weight:700; color:var(--green);">${turnout}%</div>
+              <div style="font-size:var(--text-xs); color:var(--text-secondary);">Turnout</div>
             </div>
           </div>
-          <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:12px; color:var(--text2);">Candidates</h3>
+          <h3 style="font-family:'Noto Serif',serif; font-size:var(--text-sm); font-weight:600; margin-bottom:12px; color:var(--navy);">Candidates</h3>
           <div id="candidates-list"><div class="spinner"></div></div>
         </div>
       `;
 
             panel.classList.add('open');
 
-            // Fetch candidates
             const res = await api('GET', `/api/constituencies/${constId}/candidates`);
             const list = document.getElementById('candidates-list');
             if (res && res.success) {
                 list.innerHTML = res.candidates.map(c => `
-          <div class="glass-card" style="padding:12px; margin-bottom:8px; cursor:pointer;"
+          <div class="glass-card" style="padding:12px; margin-bottom:8px; cursor:pointer; border-left:4px solid ${c.color_code};"
                onclick="openCandidateDetail(${c.candidate_id})">
             <div class="flex items-center gap-3">
               <span class="party-dot" style="background:${c.color_code}; width:12px; height:12px;"></span>
               <div style="flex:1;">
-                <div style="font-size:0.85rem; font-weight:600;">${c.name}</div>
-                <div class="text-xs text-muted">${c.party_abbr} · Age ${c.age}</div>
+                <div style="font-size:var(--text-sm); font-weight:600; color:var(--text-primary);">${c.name}</div>
+                <div style="font-size:var(--text-xs); color:var(--text-secondary);">${c.party_abbr} · Age ${c.age}</div>
               </div>
-              <span style="font-size:0.7rem; color:var(--text3);">→</span>
+              <span style="font-size:var(--text-xs); color:var(--text-light);">&rarr;</span>
             </div>
           </div>
         `).join('');
             } else {
-                list.innerHTML = '<p class="text-muted text-sm">No candidates found</p>';
+                list.innerHTML = '<p style="color:var(--text-secondary); font-size:var(--text-sm);">No candidates found</p>';
             }
         }
 
@@ -229,43 +248,43 @@
                 const crimColor = c.criminal_cases > 0 ? 'var(--red)' : 'var(--green)';
                 content.innerHTML = `
           <div style="margin-top:20px;">
-            <div style="width:70px; height:85px; background:var(--glass); border:1px solid var(--border); border-radius:8px;
-                        display:flex; align-items:center; justify-content:center; font-size:2rem; margin-bottom:16px;">
-              ${c.gender === 'Female' ? '👩' : '👨'}
+            <div style="width:70px; height:85px; background:var(--ivory); border:1px solid var(--border); border-radius:var(--radius-sm);
+                        display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#003580" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <h2 style="font-size:1.1rem; font-weight:700; margin-bottom:4px;">${c.name}</h2>
+            <h2 style="font-family:'Noto Serif',serif; font-size:var(--text-lg); font-weight:700; color:var(--navy); margin-bottom:4px;">${c.name}</h2>
             <div class="flex items-center gap-2 mb-4">
               <span class="party-dot" style="background:${c.color_code};"></span>
-              <span style="font-size:0.85rem; color:${c.color_code}; font-weight:600;">${c.party_name}</span>
+              <span style="font-size:var(--text-sm); color:${c.color_code}; font-weight:600;">${c.party_name}</span>
             </div>
 
             <div style="display:grid; gap:12px;">
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Age</span><span class="text-sm">${c.age}</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Age</span><span style="font-size:var(--text-sm);">${c.age}</span></div>
               </div>
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Gender</span><span class="text-sm">${c.gender}</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Gender</span><span style="font-size:var(--text-sm);">${c.gender}</span></div>
               </div>
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Education</span><span class="text-sm">${c.education || 'N/A'}</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Education</span><span style="font-size:var(--text-sm);">${c.education || 'N/A'}</span></div>
               </div>
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Constituency</span><span class="text-sm">${c.constituency_name}</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Constituency</span><span style="font-size:var(--text-sm);">${c.constituency_name}</span></div>
               </div>
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Assets</span><span class="text-sm">₹${c.assets_lakh || 0}L</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Assets</span><span style="font-size:var(--text-sm);">&#8377;${c.assets_lakh || 0}L</span></div>
               </div>
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Liabilities</span><span class="text-sm">₹${c.liabilities_lakh || 0}L</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Liabilities</span><span style="font-size:var(--text-sm);">&#8377;${c.liabilities_lakh || 0}L</span></div>
               </div>
               <div class="glass-card" style="padding:12px;">
                 <div class="flex justify-between">
-                  <span class="text-xs text-muted">Criminal Cases</span>
-                  <span class="text-sm" style="color:${crimColor}; font-weight:700;">${c.criminal_cases}</span>
+                  <span style="font-size:var(--text-xs); color:var(--text-secondary);">Criminal Cases</span>
+                  <span style="font-size:var(--text-sm); color:${crimColor}; font-weight:700;">${c.criminal_cases}</span>
                 </div>
               </div>
               <div class="glass-card" style="padding:12px;">
-                <div class="flex justify-between"><span class="text-xs text-muted">Alliance</span><span class="text-sm">${c.alliance || 'None'}</span></div>
+                <div class="flex justify-between"><span style="font-size:var(--text-xs); color:var(--text-secondary);">Alliance</span><span style="font-size:var(--text-sm);">${c.alliance || 'None'}</span></div>
               </div>
             </div>
           </div>

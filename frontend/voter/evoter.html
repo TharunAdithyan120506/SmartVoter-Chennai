@@ -4,40 +4,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Voter Card — Chennai Elections 2026</title>
+    <title>E-Voter Card — Chennai Election Portal</title>
+    <meta name="description" content="Digital Voter Identification Card with QR Code — Chennai District Elections 2026">
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
-    <div class="grid-bg"></div>
     <div class="layout">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">🗳️ Chennai Elections<span>2026 Legislative Assembly</span></div>
+                <div class="sidebar-logo">
+                    <div class="logo-emblem">
+                        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="48" fill="none" stroke="white" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="20" fill="none" stroke="white" stroke-width="2"/>
+                            <line x1="50" y1="2" x2="50" y2="30" stroke="white" stroke-width="2"/>
+                            <line x1="50" y1="70" x2="50" y2="98" stroke="white" stroke-width="2"/>
+                            <line x1="2" y1="50" x2="30" y2="50" stroke="white" stroke-width="2"/>
+                            <line x1="70" y1="50" x2="98" y2="50" stroke="white" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="6" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        Chennai Elections
+                        <span>2026 Legislative Assembly</span>
+                    </div>
+                </div>
             </div>
             <nav class="sidebar-nav">
-                <a href="home.html" class="nav-item"><span class="icon">🗺️</span> Constituency Map</a>
-                <a href="evoter.html" class="nav-item active"><span class="icon">🪪</span> E-Voter Card</a>
-                <a href="profile.html" class="nav-item"><span class="icon">👤</span> My Profile</a>
+                <a href="home.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+                    Constituency Map
+                </a>
+                <a href="evoter.html" class="nav-item active">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span>
+                    E-Voter Card
+                </a>
+                <a href="profile.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                    My Profile
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <div class="voter-chip">
-                    <div class="voter-chip-avatar" id="avatar">👤</div>
+                    <div class="voter-chip-avatar" id="avatar">—</div>
                     <div class="voter-chip-info">
                         <div class="voter-chip-name" id="voter-name">Loading...</div>
                         <div class="voter-chip-id" id="voter-id">—</div>
                     </div>
                 </div>
-                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
             </div>
         </aside>
 
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">🪪 E-Voter Card</h1>
-                <p class="page-subtitle">Your digital voter identification card with QR code</p>
+                <h1 class="page-title">E-Voter Card</h1>
+                <p class="page-subtitle">Digital voter identification card with QR verification code</p>
             </div>
 
             <div class="voter-card" id="voter-card-el">
@@ -49,7 +74,9 @@
 
                 <!-- Body -->
                 <div class="voter-card-body">
-                    <div class="voter-card-photo" id="card-photo">👤</div>
+                    <div class="voter-card-photo" id="card-photo">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#003580" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
                     <div class="voter-card-details">
                         <h2 id="card-name">—</h2>
                         <div class="voter-field">
@@ -78,20 +105,21 @@
                         </div>
                     </div>
                     <div>
-                        <div id="qrcode" style="background:white; padding:6px; border-radius:6px;"></div>
+                        <div id="qrcode" style="background:white; padding:6px; border-radius:4px; border:1px solid #D9D9D9;"></div>
                     </div>
                 </div>
 
                 <!-- Footer -->
                 <div class="voter-card-footer">
                     <span id="card-address">—</span>
-                    <span style="font-weight:600; color:var(--accent);">VALID 2026</span>
+                    <span style="font-weight:600; color:var(--green);">VALID 2026</span>
                 </div>
             </div>
 
             <div style="text-align:center; margin-top:24px;">
                 <button class="btn btn-primary btn-lg" onclick="downloadCard()">
-                    📥 Download Card as PNG
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download Card as PNG
                 </button>
             </div>
         </main>
@@ -106,9 +134,8 @@
             document.getElementById('voter-name').textContent = voter.name;
             document.getElementById('voter-id').textContent = voter.voter_id;
 
-            const isF = voter.gender === 'Female';
-            document.getElementById('avatar').textContent = isF ? '👩' : '👨';
-            document.getElementById('card-photo').textContent = isF ? '👩' : '👨';
+            const initials = voter.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+            document.getElementById('avatar').textContent = initials;
 
             document.getElementById('card-name').textContent = voter.name;
             document.getElementById('card-voter-id').textContent = voter.voter_id;
@@ -124,7 +151,7 @@
                 text: voter.voter_id,
                 width: 100,
                 height: 100,
-                colorDark: '#000000',
+                colorDark: '#003580',
                 colorLight: '#ffffff'
             });
         }
@@ -132,14 +159,14 @@
         function downloadCard() {
             const card = document.getElementById('voter-card-el');
             html2canvas(card, {
-                backgroundColor: '#111827',
+                backgroundColor: '#F5F5F0',
                 scale: 2,
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'e-voter-card.png';
                 link.href = canvas.toDataURL();
                 link.click();
-                showToast('Card downloaded!', 'success');
+                showToast('Card downloaded successfully', 'success');
             });
         }
 

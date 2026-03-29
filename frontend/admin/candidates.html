@@ -4,53 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Candidates — Admin Portal</title>
+    <title>Candidates — Administrative Portal</title>
+    <meta name="description" content="Registered candidates for the 2026 Chennai District Elections">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
-    <div class="grid-bg"></div>
     <div class="layout">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="sidebar-logo">🛡️ Admin Portal<span>Election Commission</span></div>
+                <div class="sidebar-logo">
+                    <div class="logo-emblem">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        Administrative Portal
+                        <span>Election Commission of India</span>
+                    </div>
+                </div>
             </div>
             <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-item"><span class="icon">📊</span> Dashboard</a>
-                <a href="voters.html" class="nav-item"><span class="icon">👥</span> Voter List</a>
-                <a href="candidates.html" class="nav-item active"><span class="icon">🏛️</span> Candidates</a>
-                <a href="polling.html" class="nav-item"><span class="icon">🗳️</span> Polling Mode</a>
-                <a href="results.html" class="nav-item"><span class="icon">📈</span> Results</a>
+                <a href="dashboard.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                    Dashboard
+                </a>
+                <a href="voters.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+                    Voter List
+                </a>
+                <a href="candidates.html" class="nav-item active">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg></span>
+                    Candidates
+                </a>
+                <a href="polling.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span>
+                    Polling Mode
+                </a>
+                <a href="results.html" class="nav-item">
+                    <span class="icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+                    Results
+                </a>
             </nav>
             <div class="sidebar-footer">
-                <button class="btn-logout" onclick="logout()">↗ Sign Out</button>
+                <button class="btn-logout" onclick="logout()">Sign Out</button>
             </div>
         </aside>
 
         <main class="main-content">
             <div class="page-header">
-                <h1 class="page-title">🏛️ Candidates</h1>
-                <p class="page-subtitle">All registered candidates for the 2026 elections</p>
+                <h1 class="page-title">Candidates</h1>
+                <p class="page-subtitle">All registered candidates for the 2026 Legislative Assembly Elections</p>
             </div>
 
             <div class="table-container">
                 <div class="table-header">
                     <select class="form-input" id="const-filter"
-                        style="width:250px; padding:8px 14px; font-size:0.8rem;" onchange="loadCandidates()">
+                        style="width:250px; padding:8px 14px; font-size:var(--text-sm);" onchange="loadCandidates()">
                         <option value="">All Constituencies</option>
                     </select>
-                    <span class="text-xs text-muted" id="total-label">—</span>
+                    <span style="font-size:var(--text-xs); color:var(--text-secondary);" id="total-label">—</span>
                 </div>
                 <table>
                     <thead>
                         <tr>
-                            <th onclick="sortBy('name')">Name ↕</th>
-                            <th onclick="sortBy('party_abbr')">Party ↕</th>
-                            <th onclick="sortBy('age')">Age ↕</th>
+                            <th onclick="sortBy('name')">Name &udarr;</th>
+                            <th onclick="sortBy('party_abbr')">Party &udarr;</th>
+                            <th onclick="sortBy('age')">Age &udarr;</th>
                             <th>Gender</th>
-                            <th onclick="sortBy('constituency_name')">Constituency ↕</th>
-                            <th onclick="sortBy('criminal_cases')">Criminal Cases ↕</th>
-                            <th onclick="sortBy('assets_lakh')">Assets (₹L) ↕</th>
+                            <th onclick="sortBy('constituency_name')">Constituency &udarr;</th>
+                            <th onclick="sortBy('criminal_cases')">Criminal Cases &udarr;</th>
+                            <th onclick="sortBy('assets_lakh')">Assets (&#8377;L) &udarr;</th>
                         </tr>
                     </thead>
                     <tbody id="candidates-table"></tbody>
@@ -69,7 +94,6 @@
             const data = await requireAdminAuth();
             if (!data) return;
 
-            // Load constituency dropdown
             const constRes = await api('GET', '/api/constituencies');
             if (constRes && constRes.success) {
                 const sel = document.getElementById('const-filter');
@@ -116,18 +140,18 @@
             tbody.innerHTML = sorted.map(c => {
                 const crimStyle = c.criminal_cases > 0 ? 'color:var(--red);font-weight:700;' : 'color:var(--green);';
                 return `<tr>
-          <td style="font-weight:600; color:var(--text1);">${c.name}</td>
+          <td style="font-weight:600; color:var(--text-primary);">${c.name}</td>
           <td>
             <div class="flex items-center gap-2">
               <span class="party-dot" style="background:${c.color_code};"></span>
-              <span style="color:${c.color_code}; font-weight:600; font-size:0.8rem;">${c.party_abbr}</span>
+              <span style="color:${c.color_code}; font-weight:600; font-size:var(--text-sm);">${c.party_abbr}</span>
             </div>
           </td>
           <td>${c.age}</td>
           <td>${c.gender}</td>
           <td>${c.constituency_name}</td>
           <td style="${crimStyle}">${c.criminal_cases}</td>
-          <td>₹${c.assets_lakh || 0}</td>
+          <td>&#8377;${c.assets_lakh || 0}</td>
         </tr>`;
             }).join('');
         }

@@ -11,7 +11,7 @@ def get_db():
             user=Config.MYSQL_USER,
             password=Config.MYSQL_PASSWORD,
             database=Config.MYSQL_DB,
-            autocommit=False
+            autocommit=True
         )
     return g.db
 
@@ -48,7 +48,6 @@ def execute(sql, params=None):
     db = get_db()
     cursor = db.cursor()
     cursor.execute(sql, params or ())
-    db.commit()
     rowid = cursor.lastrowid
     cursor.close()
     return rowid
@@ -62,6 +61,29 @@ def call_procedure(proc_name, args=()):
     results = []
     for result in cursor.stored_results():
         results.append(result.fetchall())
-    db.commit()
     cursor.close()
     return results
+
+
+def call_procedure_with_out(proc_name, args=(), out_indices=None):
+    """Call a stored procedure and retrieve OUT parameter values.
+    out_indices: list of 0-based positions of OUT params in the args tuple.
+    Returns (result_sets, out_values_dict).
+    """
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.callproc(proc_name, args)
+    results = []
+    for result in cursor.stored_results():
+        results.append(result.fetchall())
+
+    # Retrieve OUT params via MySQL session variables
+    out_values = {}
+    if out_indices:
+        for idx in out_indices:
+            cursor.execute(f"SELECT @_{proc_name}_{idx} AS val")
+            row = cursor.fetchone()
+            out_values[idx] = row['val'] if row else None
+
+    cursor.close()
+    return results, out_values

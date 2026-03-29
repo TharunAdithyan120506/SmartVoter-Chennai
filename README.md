@@ -149,6 +149,21 @@ All tables are in **Third Normal Form (3NF)**:
 - **2NF**: All non-key attributes depend on the entire primary key (no partial dependencies)
 - **3NF**: No transitive dependencies — e.g., party info is in `parties`, not duplicated in `candidates`
 
+## 🌐 Deployment
+
+### Deploy to Render (Easiest)
+This project is configured for one-click deployment on Render.
+1. Push this repo to GitHub.
+2. Go to [Render Dashboard](https://dashboard.render.com).
+3. Create a **New Blueprint Instance**.
+4. Select this repository.
+5. Click **Apply**.
+
+### Deploy with Docker
+```bash
+docker-compose up --build
+```
+
 ## 📝 License
 
 Academic project — Tamil Nadu Legislative Assembly 2026 (fictional scenario).
