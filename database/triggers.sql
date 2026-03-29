@@ -7,6 +7,7 @@ USE election_db;
 -- -----------------------------------------------
 -- Trigger 1: Prevent double voting (BEFORE INSERT on votes)
 -- -----------------------------------------------
+DROP TRIGGER IF EXISTS before_vote_insert;
 DELIMITER $$
 CREATE TRIGGER before_vote_insert
 BEFORE INSERT ON votes
@@ -24,6 +25,7 @@ DELIMITER ;
 -- -----------------------------------------------
 -- Trigger 2: Mark voter as voted (AFTER INSERT on votes)
 -- -----------------------------------------------
+DROP TRIGGER IF EXISTS after_vote_insert;
 DELIMITER $$
 CREATE TRIGGER after_vote_insert
 AFTER INSERT ON votes
@@ -38,6 +40,7 @@ DELIMITER ;
 -- -----------------------------------------------
 -- Trigger 3: Update constituency turnout count (AFTER INSERT on votes)
 -- -----------------------------------------------
+DROP TRIGGER IF EXISTS after_vote_update_turnout;
 DELIMITER $$
 CREATE TRIGGER after_vote_update_turnout
 AFTER INSERT ON votes
@@ -52,6 +55,7 @@ DELIMITER ;
 -- -----------------------------------------------
 -- Trigger 4: Log admin edits to voters table (AFTER UPDATE on voters)
 -- -----------------------------------------------
+DROP TRIGGER IF EXISTS after_voter_update_audit;
 DELIMITER $$
 CREATE TRIGGER after_voter_update_audit
 AFTER UPDATE ON voters

@@ -408,9 +408,9 @@ h4 {
 /* --- Toast Notifications --- */
 .toast-container {
   position: fixed;
-  top: 20px;
+  top: 90px;
   right: 20px;
-  z-index: 10000;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -441,13 +441,13 @@ h4 {
 
 .toast-error {
   border-left-color: var(--red);
-  background: rgba(211, 47, 47, 0.08);
+  background: #FDE8E8;
   color: var(--red);
 }
 
 .toast-info {
   border-left-color: var(--chakra-blue);
-  background: rgba(26, 77, 162, 0.08);
+  background: #EBF1FA;
   color: var(--chakra-blue);
 }
 

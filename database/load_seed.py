@@ -127,7 +127,7 @@ def load_csv(cursor, table_name, csv_path, columns):
                 placeholders.append('%s')
                 cols.append(col)
 
-            sql = f"INSERT INTO {table_name} ({', '.join(cols)}) VALUES ({', '.join(placeholders)})"
+            sql = f"INSERT IGNORE INTO {table_name} ({', '.join(cols)}) VALUES ({', '.join(placeholders)})"
             try:
                 cursor.execute(sql, values)
                 count += 1
@@ -219,7 +219,7 @@ def main():
     ]
     for key, value, desc in config_rows:
         cursor.execute(
-            "INSERT INTO election_config (config_key, config_value, description) VALUES (%s, %s, %s)",
+            "INSERT IGNORE INTO election_config (config_key, config_value, description) VALUES (%s, %s, %s)",
             (key, value, desc)
         )
     print(f"  ✓ election_config: {len(config_rows)} rows inserted")

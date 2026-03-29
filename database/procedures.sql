@@ -7,6 +7,7 @@ USE election_db;
 -- -----------------------------------------------
 -- Procedure 1: cast_vote (atomic vote transaction)
 -- -----------------------------------------------
+DROP PROCEDURE IF EXISTS cast_vote;
 DELIMITER $$
 CREATE PROCEDURE cast_vote(
   IN p_voter_id       VARCHAR(20),
@@ -54,6 +55,7 @@ DELIMITER ;
 -- -----------------------------------------------
 -- Procedure 2: verify_voter (lookup for polling mode)
 -- -----------------------------------------------
+DROP PROCEDURE IF EXISTS verify_voter;
 DELIMITER $$
 CREATE PROCEDURE verify_voter(IN p_aadhar CHAR(12))
 BEGIN
@@ -73,6 +75,7 @@ DELIMITER ;
 -- -----------------------------------------------
 -- Procedure 3: get_constituency_results
 -- -----------------------------------------------
+DROP PROCEDURE IF EXISTS get_constituency_results;
 DELIMITER $$
 CREATE PROCEDURE get_constituency_results(IN p_constituency_id INT)
 BEGIN
@@ -98,6 +101,7 @@ DELIMITER ;
 -- -----------------------------------------------
 -- Procedure 4: generate_otp_session
 -- -----------------------------------------------
+DROP PROCEDURE IF EXISTS generate_otp_session;
 DELIMITER $$
 CREATE PROCEDURE generate_otp_session(
   IN p_aadhar    CHAR(12),

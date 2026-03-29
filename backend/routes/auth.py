@@ -2,6 +2,8 @@
 import hashlib
 import random
 import string
+import uuid
+from datetime import datetime, timedelta
 from functools import wraps
 
 from flask import Blueprint, request, jsonify, session
@@ -56,16 +58,24 @@ def send_otp():
     otp = ''.join(random.choices(string.digits, k=6))
     otp_hashed = hash_otp(otp)
 
-    # Store OTP session via stored procedure
+    # Generate session_id and store OTP session using inline SQL
+    # (avoids MySQL OUT parameter retrieval issues with mysql-connector)
+    session_id = str(uuid.uuid4())
     db = get_db()
     cursor = db.cursor()
-    args = [aadhar, otp_hashed, '']  # OUT param placeholder
-    cursor.callproc('generate_otp_session', args)
 
-    # Retrieve the OUT parameter via MySQL session variable
-    cursor.execute("SELECT @_generate_otp_session_2 AS session_id")
-    out_row = cursor.fetchone()
-    session_id = out_row[0] if out_row else None
+    # Expire old sessions for this aadhar
+    cursor.execute(
+        "UPDATE otp_sessions SET is_used = TRUE WHERE aadhar = %s AND is_used = FALSE",
+        (aadhar,)
+    )
+
+    # Insert new session with 10-minute expiry
+    cursor.execute(
+        "INSERT INTO otp_sessions (session_id, aadhar, otp_hash, expires_at) "
+        "VALUES (%s, %s, %s, DATE_ADD(NOW(), INTERVAL 10 MINUTE))",
+        (session_id, aadhar, otp_hashed)
+    )
     cursor.close()
 
     # Mask phone number
@@ -114,6 +124,10 @@ def verify_otp():
 
     if otp_session['is_used']:
         return jsonify({'success': False, 'error': 'OTP has already been used'}), 400
+
+    # Check if OTP has expired
+    if otp_session['expires_at'] and otp_session['expires_at'] < datetime.now():
+        return jsonify({'success': False, 'error': 'OTP has expired. Please request a new one.'}), 400
 
     if otp_session['attempts'] >= 5:
         return jsonify({'success': False, 'error': 'Too many attempts. Request a new OTP.'}), 400

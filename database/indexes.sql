@@ -5,6 +5,7 @@
 USE election_db;
 
 -- Speed up OTP login aadhar lookup
+-- (aadhar has a UNIQUE constraint so an index already exists, but this is explicit)
 CREATE INDEX idx_voters_aadhar ON voters(aadhar);
 
 -- Speed up vote aggregation by constituency

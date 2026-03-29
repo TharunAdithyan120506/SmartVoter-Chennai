@@ -289,23 +289,11 @@ def polling_vote():
                 db.rollback()
                 return jsonify({'success': False, 'error': 'Candidate not in voter constituency'}), 400
 
-            # 3. Insert vote record
+            # 3. Insert vote record (triggers handle has_voted + turnout count)
             cursor.execute(
                 """INSERT INTO votes (voter_id, candidate_id, constituency_id, booth_id, admin_id)
                    VALUES (%s, %s, %s, %s, %s)""",
                 (voter_id, int(candidate_id), v_constituency_id, v_booth_id, int(admin_id))
-            )
-
-            # 4. Mark voter as voted
-            cursor.execute(
-                "UPDATE voters SET has_voted = TRUE WHERE voter_id = %s",
-                (voter_id,)
-            )
-
-            # 5. Update constituency turnout count
-            cursor.execute(
-                "UPDATE constituencies SET voted_count = voted_count + 1 WHERE constituency_id = %s",
-                (v_constituency_id,)
             )
 
             db.commit()
