@@ -98,7 +98,7 @@ def execute_sql_file(cursor, filepath):
         statements = content.split(';')
         for stmt in statements:
             stmt = stmt.strip()
-            if stmt and not stmt.startswith('--'):
+            if stmt:
                 try:
                     cursor.execute(stmt)
                 except mysql.connector.Error as e:
